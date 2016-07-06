@@ -1,0 +1,8 @@
+Restful接口设计：
+	Restful本身是一种优雅的URL表述方式：
+		GET   /seckill/list   秒杀列表
+		GET   /seckill/{id}/detail   详情页
+		POST  /seckill/{id}/{md5}/execution   执行秒杀
+		POST  /seckill/{seckillId}/execution
+		DELETE  /seckill/{id}/delete
+		/user/{uid}/followers   ----->  关注者列表
