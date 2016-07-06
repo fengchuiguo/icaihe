@@ -33,11 +33,11 @@
 
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1/seckill?useUnicode=false&amp;autoReconnect=true&amp;characterEncoding=utf-8"
+                        connectionURL="jdbc:mysql://127.0.0.1/icaihe?useUnicode=false&amp;autoReconnect=true&amp;characterEncoding=utf-8"
                         userId="root" password="123456"/>
 
         <!--生成Model类存放位置-->
-        <javaModelGenerator targetPackage="com.robotsafebox.entity.demo1.seckillTest"
+        <javaModelGenerator targetPackage="com.robotsafebox.entity"
                             targetProject="src/main/java">
             <!-- 关闭自动添加子包（自动添加schema) -->
             <property name="enableSubPackages" value="false"/>
@@ -51,7 +51,7 @@
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!--生成Dao类存放位置-->
-        <javaClientGenerator targetPackage="com.robotsafebox.dao.demo1.seckillTest"
+        <javaClientGenerator targetPackage="com.robotsafebox.dao"
                              targetProject="src/main/java" type="XMLMAPPER">
             <!-- 关闭自动添加子包（自动添加schema) -->
             <property name="enableSubPackages" value="false"/>
@@ -60,7 +60,7 @@
 
         <!--生成对应表及类名-->
         <!--<table schema="" tableName="seckill"/>-->
-        <table tableName="seckill" domainObjectName="seckillTest"
+        <table tableName="hardware_report_log" domainObjectName="HardwareReportLog"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

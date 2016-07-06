@@ -6,3 +6,16 @@ Restful接口设计：
 		POST  /seckill/{seckillId}/execution
 		DELETE  /seckill/{id}/delete
 		/user/{uid}/followers   ----->  关注者列表
+
+
+
+
+
+hardWareReportLog
+
+
+
+
+
+
+

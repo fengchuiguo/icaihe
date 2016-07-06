@@ -9,13 +9,35 @@
        例如：{"state":1,"message":"获取数据成功！","data":1466667342278}
 
 
-    (2)请求说明：所有的请求需要带上apicheck参数。（目前“8Hmj5FDP1X32v0GqsU_SR7c2”的MD5加密数值）
-
+    (2)请求说明：所有的请求需要带上apicheck参数。（例如：“8Hmj5FDP1X32v0GqsU_SR7c2”的MD5加密数值）
        例如：http://localhost:8080/api/v1/demo?apicheck=94a625089169d175e852545808f9c2e9
-
+       *目前暂时未使用该拦截器。暂时不用。
 
 
 二，接口
+
+（1）/report      添加硬件上报记录，POST请求。
+    临时查看结果页面： http://localhost:8080/icaihe/report/list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

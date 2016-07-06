@@ -13,21 +13,6 @@
     <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
 
     <!--第二步：数据库连接池-->
-    <!--<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">-->
-        <!--&lt;!&ndash;配置连接池属性&ndash;&gt;-->
-        <!--<property name="driverClass" value="${jdbc.driverClass}"></property>-->
-        <!--<property name="jdbcUrl" value="${jdbc.url}"></property>-->
-        <!--<property name="user" value="${jdbc.username}"></property>-->
-        <!--<property name="password" value="${jdbc.password}"></property>-->
-
-        <!--&lt;!&ndash;配置c3p0连接池私有属性  ?&ndash;&gt;-->
-        <!--<property name="maxPoolSize" value="30"></property>-->
-        <!--<property name="minPoolSize" value="10"></property>-->
-        <!--<property name="autoCommitOnClose" value="false"></property>-->
-        <!--<property name="checkoutTimeout" value="1000"></property>-->
-        <!--<property name="acquireRetryAttempts" value="2"></property>-->
-    <!--</bean>-->
-
     <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <property name="driverClassName" value="${jdbc.driverClass}"/>
         <property name="url" value="${jdbc.url}"/>
