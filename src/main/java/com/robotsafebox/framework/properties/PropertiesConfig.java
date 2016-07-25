@@ -11,7 +11,7 @@ public class PropertiesConfig {
 
     private static PropertiesConfiguration smsConfigProperties;
 
-    public static String getConfig(String key) {
+    private static String getConfig(String key) {
         if (sysConfig == null) {
             try {
                 sysConfig = new PropertiesConfiguration("config.properties");
@@ -37,9 +37,9 @@ public class PropertiesConfig {
         return getConfig("backgroundVistUrl");
     }
 
-    public static String getWebTitle() {
+    public static String getConfigByKey(String key) {
         try {
-            return new String(getConfig("webtitle").getBytes("iso8859-1"), "UTF-8");
+            return new String(getConfig(key).getBytes("iso8859-1"), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

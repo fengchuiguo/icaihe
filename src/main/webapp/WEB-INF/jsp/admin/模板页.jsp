@@ -14,11 +14,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                首页
-                <small>我的首页</small>
+                Page Header
+                <small>Optional description</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                <li class="active">Here</li>
             </ol>
         </section>
 

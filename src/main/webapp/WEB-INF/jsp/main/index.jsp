@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${webtitle}</title>
+    <title>${_webTitle}</title>
     <%@include file="../common/head.jsp" %>
 </head>
 <body>

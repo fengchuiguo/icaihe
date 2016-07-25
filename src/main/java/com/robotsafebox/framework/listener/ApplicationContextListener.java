@@ -19,8 +19,15 @@ public class ApplicationContextListener implements ServletContextListener {
         application.setAttribute("path", application.getContextPath());
         //image path
         application.setAttribute("imagePath", PropertiesConfig.getImagePath());
-        //webtitle
-        application.setAttribute("webtitle", PropertiesConfig.getWebTitle());
+
+        //_logoName
+        application.setAttribute("_logoName", PropertiesConfig.getConfigByKey("_logoName"));
+        //_simpleLogoName
+        application.setAttribute("_simpleLogoName", PropertiesConfig.getConfigByKey("_simpleLogoName"));
+        //_webtitle
+        application.setAttribute("_webTitle", PropertiesConfig.getConfigByKey("_webTitle"));
+        //_adminWebTitle
+        application.setAttribute("_adminWebTitle", PropertiesConfig.getConfigByKey("_adminWebTitle"));
     }
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
