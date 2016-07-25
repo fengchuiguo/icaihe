@@ -1,13 +1,7 @@
 package com.robotsafebox.web.api;
 
 import com.robotsafebox.base.json.JsonResult;
-import com.robotsafebox.dto.demo1.Exposer;
-import com.robotsafebox.dto.demo1.SeckillExecution;
-import com.robotsafebox.dto.demo1.SeckillResult;
 import com.robotsafebox.entity.demo1.Seckill;
-import com.robotsafebox.enums.demo1.SeckillStateEnums;
-import com.robotsafebox.exception.demo1.RepeatKillException;
-import com.robotsafebox.exception.demo1.SeckillCloseException;
 import com.robotsafebox.framework.model.Pager;
 import com.robotsafebox.framework.properties.Constant;
 import com.robotsafebox.framework.sms.ihuyi.SmsSendUtils;
@@ -16,10 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Controller

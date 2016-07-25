@@ -1,7 +1,7 @@
 package com.robotsafebox.framework.interceptor.dao;
 
 import com.robotsafebox.framework.model.Pager;
-import com.robotsafebox.utils.ReflectUtil;
+import com.robotsafebox.framework.utils.ReflectUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;

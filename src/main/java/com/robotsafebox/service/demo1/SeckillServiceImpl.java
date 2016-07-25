@@ -1,6 +1,5 @@
 package com.robotsafebox.service.demo1;
 
-import com.robotsafebox.dao.cache.demo1.RedisDao;
 import com.robotsafebox.dao.demo1.SeckillDao;
 import com.robotsafebox.dao.demo1.SuccessKilledDao;
 import com.robotsafebox.dto.demo1.Exposer;
