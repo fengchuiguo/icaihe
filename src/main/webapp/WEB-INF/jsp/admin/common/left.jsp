@@ -9,10 +9,10 @@
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel">
       <div class="pull-left image">
-        <img src="${path}/resources/img/gly.jpg" class="img-circle" alt="管理员">
+        <img src="${path}/resources/img/gly.jpg" class="img-circle" alt="${not empty adminUser.showName ? adminUser.showName  : adminUser.userName}">
       </div>
       <div class="pull-left info">
-        <p>管理员</p>
+        <p>${not empty adminUser.showName ? adminUser.showName  : adminUser.userName}</p>
         <!-- Status -->
         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
       </div>

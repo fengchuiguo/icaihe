@@ -66,19 +66,21 @@
                         </div>
                     </div>
                     <div class="form-bottom">
-                        <form role="form" action="" method="post" class="login-form">
+                        <form method="post" class="login-form">
                             <div class="form-group">
-                                <label class="sr-only" for="form-username">Username</label>
-                                <input type="text" name="form-username" placeholder="用户名"
-                                       class="form-username form-control" id="form-username">
+                                <label class="sr-only" for="username">Username</label>
+                                <input type="text" name="username" placeholder="用户名" maxlength="20"
+                                       class="form-username form-control" id="username">
                             </div>
                             <div class="form-group">
-                                <label class="sr-only" for="form-password">Password</label>
-                                <input type="password" name="form-password" placeholder="密码"
-                                       class="form-password form-control" id="form-password">
+                                <label class="sr-only" for="password">Password</label>
+                                <input type="password" name="password" placeholder="密码" maxlength="20"
+                                       class="form-password form-control" id="password">
                             </div>
-                            <button type="submit" class="btn">登录</button>
                         </form>
+
+                        <button id="loginbutton" class="btn" style="width: 100%;">登录</button>
+
                     </div>
                 </div>
             </div>
@@ -92,6 +94,11 @@
 <script src="${path}/resources/component/adminLogin/assets/js/jquery-1.11.1.min.js"></script>
 <script src="${path}/resources/component/adminLogin/assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="${path}/resources/component/adminLogin/assets/js/jquery.backstretch.min.js"></script>
+
+<script src="${path}/resources/component/layer/web/layer.js"></script>
+
+<%@ include file="/WEB-INF/jsp/admin/common/_commonparam.jsp" %>
+
 <script>
     jQuery(document).ready(function () {
 
@@ -107,16 +114,42 @@
             $(this).removeClass('input-error');
         });
 
-        $('.login-form').on('submit', function (e) {
-            $(this).find('input[type="text"], input[type="password"], textarea').each(function () {
+        $('#loginbutton').bind("click", function (e) {
+
+            var emptyFlag = 0;
+
+            $('.login-form').find('input[type="text"], input[type="password"], textarea').each(function () {
                 if ($(this).val() == "") {
                     e.preventDefault();
                     $(this).addClass('input-error');
+                    emptyFlag = 1;
                 }
                 else {
                     $(this).removeClass('input-error');
                 }
             });
+
+            if (emptyFlag == 0) {
+                $.ajax({
+                    url: "${path}/doAdminLogin",
+                    async: false,
+                    cache: false,
+                    type: 'post',
+                    dataType: "json",
+                    data: $('.login-form').serialize(),
+                    success: function (data) {
+                        if (data.state == '1') {
+                            window.location.href = "${path}/admin/index";
+                        } else {
+                            layer.msg(data.message, {time: _layer_msg_time});
+                        }
+                    },
+                    error: function (xhr, type) {
+                        layer.msg("登录失败", {time: _layer_msg_time});
+                    }
+                });
+            }
+
         });
 
     });

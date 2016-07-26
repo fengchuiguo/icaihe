@@ -127,7 +127,7 @@
                         <!-- The user image in the navbar-->
                         <img src="${path}/resources/img/gly.jpg" class="user-image" alt="User Image">
                         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        <span class="hidden-xs">管理员</span>
+                        <span class="hidden-xs">${not empty adminUser.showName ? adminUser.showName  : adminUser.userName}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- The user image in the menu -->
@@ -135,8 +135,8 @@
                             <img src="${path}/resources/img/gly.jpg" class="img-circle" alt="User Image">
 
                             <p>
-                                管理员
-                                <small>系统管理员</small>
+                                ${not empty adminUser.showName ? adminUser.showName  : adminUser.userName}
+                                <small>${adminUser.userName}</small>
                             </p>
                         </li>
                         <%--<!-- Menu Body -->--%>

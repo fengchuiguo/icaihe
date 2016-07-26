@@ -3,6 +3,7 @@
 <html>
 <head>
     <%@ include file="/WEB-INF/jsp/admin/common/_include1.jsp"%>
+    <%@ include file="/WEB-INF/jsp/admin/common/_commonparam.jsp"%>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">

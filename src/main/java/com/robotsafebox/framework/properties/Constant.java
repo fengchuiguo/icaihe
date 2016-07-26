@@ -22,6 +22,9 @@ public class Constant {
     public static final String API_CHECK = "apicheck";
     public static final String API_CHECK_TOKEN = "8Hmj5FDP1X32v0GqsU_SR7c2";
 
+//    admin后台管理
+    public static final String ADMIN_USER = "adminUser";
+
 
     /**
      * 用户上传文件可访问目录

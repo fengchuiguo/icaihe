@@ -60,7 +60,7 @@
 
         <!--生成对应表及类名-->
         <!--<table schema="" tableName="seckill"/>-->
-        <table tableName="hardware_report_log" domainObjectName="HardwareReportLog"
+        <table tableName="ich_admin_user" domainObjectName="AdminUser"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
