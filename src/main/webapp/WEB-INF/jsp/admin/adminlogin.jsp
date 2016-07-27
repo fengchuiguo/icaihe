@@ -97,10 +97,14 @@
 
 <script src="${path}/resources/component/layer/web/layer.js"></script>
 
-<%@ include file="/WEB-INF/jsp/admin/common/_commonparam.jsp" %>
+<%@ include file="/WEB-INF/jsp/admin/common/_param.jsp" %>
 
 <script>
     jQuery(document).ready(function () {
+
+        <c:if test="${not empty adminUser}">
+        window.location.href = "${path}/admin/index";
+        </c:if>
 
         /*
          Fullscreen background

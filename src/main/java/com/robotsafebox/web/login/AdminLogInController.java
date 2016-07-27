@@ -27,9 +27,17 @@ public class AdminLogInController {
 
 
     @RequestMapping(value = "/adminLogin", method = RequestMethod.GET)
-    public String adminLogin(Model model) {
+    public String adminLogin() {
 
         return "admin/adminLogin";
+    }
+
+    @RequestMapping(value = "/adminLogOut", method = RequestMethod.GET)
+    public String adminLogOut(HttpSession httpSession) {
+        if (httpSession.getAttribute(Constant.ADMIN_USER) != null) {
+            httpSession.removeAttribute(Constant.ADMIN_USER);
+        }
+        return "redirect:/adminLogin";
     }
 
     @RequestMapping(value = "/doAdminLogin", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})

@@ -156,15 +156,20 @@
                         <%--</li>--%>
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">个人信息</a>
-                            </div>
-                            <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">退出</a>
-                            </div>
+                            <%--<div class="pull-left">--%>
+                                <%--<a href="#" class="btn btn-default btn-flat">个人信息</a>--%>
+                            <%--</div>--%>
+                            <%--<div class="pull-right">--%>
+                                <%--<a href="${path}/adminLogOut" class="btn btn-default btn-flat">退出</a>--%>
+                            <%--</div>--%>
                         </li>
                     </ul>
                 </li>
+
+                    <li>
+                        <a href="${path}/adminLogOut" data-toggle="control-sidebar"><i class="fa fa-power-off"></i>
+                            退出</a>
+                    </li>
 
                 <%--<!-- Control Sidebar Toggle Button -->--%>
                 <%--<li>--%>

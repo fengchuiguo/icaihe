@@ -33,4 +33,16 @@ public class MainAdminController {
         return "admin/index";
     }
 
+    @RequestMapping(value = "/userinfo", method = RequestMethod.GET)
+    public String userinfo(Model model) {
+
+        return "admin/userinfo/index";
+    }
+
+    @RequestMapping(value = "/sysconfig/druid", method = RequestMethod.GET)
+    public String druid(Model model) {
+
+        return "admin/sysconfig/druid/index";
+    }
+
 }
