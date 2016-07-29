@@ -11,6 +11,8 @@ public class PropertiesConfig {
 
     private static PropertiesConfiguration smsConfigProperties;
 
+    private static PropertiesConfiguration pushConfigProperties;
+
     private static String getConfig(String key) {
         if (sysConfig == null) {
             try {
@@ -31,6 +33,17 @@ public class PropertiesConfig {
             }
         }
         return smsConfigProperties.getString(key);
+    }
+
+    public static String getPushConfigByKey(String key) {
+        if (pushConfigProperties == null) {
+            try {
+                pushConfigProperties = new PropertiesConfiguration("push.properties");
+            } catch (ConfigurationException e) {
+                e.printStackTrace();
+            }
+        }
+        return pushConfigProperties.getString(key);
     }
 
     public static String getImagePath() {
