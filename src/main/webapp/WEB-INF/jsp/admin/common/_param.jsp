@@ -1,4 +1,4 @@
-<script>
+<script type="text/javascript">
 
 //    路径相关
     var path = "${path}";
