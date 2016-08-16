@@ -4,14 +4,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${_webTitle}</title>
+    <%--<title>${_webTitle}</title>--%>
+    <title>网站建设中，敬请期待！</title>
     <%@include file="../common/head.jsp" %>
 </head>
 <body>
-HelloWord
-<br/>
-<%--webtitle:${webtitle}<br/>--%>
-<%--path:${path}<br/>--%>
-<%--imagePath:${imagePath}<br/>--%>
+<div style="text-align: center;vertical-align: middle;">
+    <img src="${path}/resources/img/web_ing.png">
+</div>
 </body>
 </html>

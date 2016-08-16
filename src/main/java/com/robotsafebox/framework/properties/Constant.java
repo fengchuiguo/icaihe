@@ -17,10 +17,12 @@ public class Constant {
     public static final String NO_PERMISSION_MESSAGE = "No permission to access ";
 
 //  API
-    public static final String API_HEAD_URL = "/api";
+    public static final String API_HEAD_URL = "/api/v1";
 
-    public static final String API_CHECK = "apicheck";
-    public static final String API_CHECK_TOKEN = "8Hmj5FDP1X32v0GqsU_SR7c2";
+    public static final String API_TOKEN = "token";
+    public static final String API_TOKEN_SALT = "iCaiHe";
+    public static final String API_TOKEN_SPLIT = "_";
+    public static final Integer API_TOKEN_DAY = 7;
 
 //    admin后台管理
     public static final String ADMIN_USER = "adminUser";

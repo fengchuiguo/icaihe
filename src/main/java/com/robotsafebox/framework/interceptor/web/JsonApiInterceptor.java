@@ -4,8 +4,7 @@ package com.robotsafebox.framework.interceptor.web;
 import com.alibaba.fastjson.JSONObject;
 import com.robotsafebox.base.json.JsonResult;
 import com.robotsafebox.framework.properties.Constant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.robotsafebox.framework.tools.ApiTokenTool;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -32,15 +31,15 @@ public class JsonApiInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 //        log.info("==============执行顺序: 1、preHandle================");
 //        log.info(DigestUtils.md5DigestAsHex(Constant.API_CHECK_TOKEN.getBytes()));
-        String apicheck = request.getParameter(Constant.API_CHECK);
+        String token = request.getParameter(Constant.API_TOKEN);
+        System.out.println(token);
+        String userId = ApiTokenTool.getUserIdByToken(token);
 
         Boolean noPermission = false;
-        if (apicheck == null) {
+        if (userId == null) {
             noPermission = true;
         } else {
-            if (!apicheck.equals(DigestUtils.md5DigestAsHex(Constant.API_CHECK_TOKEN.getBytes()))) {
-                noPermission = true;
-            }
+            //todo判断id是否存在（此处暂时不做判断，可以提高一定效率；而且随机加密秘钥和加密盐可以保证很大程度的安全性了）
         }
 
         if (noPermission) {

@@ -39,13 +39,21 @@
     <!--</mvc:interceptors>-->
 
 
-
-    <!--配置拦截器(此处配置admin后台管理的拦截器) -->
+    <!--配置拦截器-->
     <mvc:interceptors>
+
+        <!--(此处配置API的拦截器)-->
         <mvc:interceptor>
-            <mvc:mapping path="/admin/**" />
+            <mvc:mapping path="/api/**"/>
+            <bean class="com.robotsafebox.framework.interceptor.web.JsonApiInterceptor"></bean>
+        </mvc:interceptor>
+
+        <!--(此处配置admin后台管理的拦截器)-->
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/**"/>
             <bean class="com.robotsafebox.framework.interceptor.web.AdminInterceptor"></bean>
         </mvc:interceptor>
+
     </mvc:interceptors>
 
 
