@@ -5,7 +5,7 @@ import com.robotsafebox.entity.HardwareReportLog;
 import com.robotsafebox.entity.demo1.Seckill;
 import com.robotsafebox.framework.model.Pager;
 import com.robotsafebox.framework.properties.Constant;
-import com.robotsafebox.framework.sms.ihuyi.SmsSendUtils;
+import com.robotsafebox.framework.sms.ihuyi.IHYSmsSendUtils;
 import com.robotsafebox.service.HardwareReportLogService;
 import com.robotsafebox.service.demo1.SeckillService;
 import org.slf4j.Logger;
@@ -73,7 +73,7 @@ public class UserController {
     public JsonResult sendSms() {
         JsonResult jsonResult = new JsonResult();
         try {
-            String s = SmsSendUtils.sendSms("phonexxx", "codexxx", "");
+            String s = IHYSmsSendUtils.sendSms("phonexxx", "codexxx", "");
             jsonResult.setData(s);
             jsonResult.setMessage("发送短信成功！");
             jsonResult.setStateSuccess();

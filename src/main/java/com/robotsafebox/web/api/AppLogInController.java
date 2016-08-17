@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
@@ -30,6 +31,53 @@ public class AppLogInController extends BaseAppController {
             //todo：与登陆一起
             String token=ApiTokenTool.getToken("156");
             jsonResult.setData(token);
+            jsonResult.setMessage("获取数据成功！");
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+    /**
+     * 登录
+     * @param phone
+     * @param code
+     * @return
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult login(@RequestParam("phone") String phone, @RequestParam("code") int code) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+
+            //todo 登录
+//            String token=ApiTokenTool.getToken();
+//            jsonResult.setData(token);
+            jsonResult.setMessage("获取数据成功！");
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+    /**
+     * 发送验证码
+     * @param phone
+     * @return
+     */
+    @RequestMapping(value = "/sendCode", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult sendCode(@RequestParam("phone") String phone) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            //todo 发送验证码
+
+//            String token=ApiTokenTool.getToken();
+//            jsonResult.setData(token);
             jsonResult.setMessage("获取数据成功！");
             jsonResult.setStateSuccess();
         } catch (Exception ex) {

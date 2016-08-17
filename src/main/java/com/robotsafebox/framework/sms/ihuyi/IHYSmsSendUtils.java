@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * huiyi短信发送接口
  */
-public class SmsSendUtils {
+public class IHYSmsSendUtils {
 
     private final static String IHUYI_SMS_SEND_URL = "ihuyismsSendUrl";
 
