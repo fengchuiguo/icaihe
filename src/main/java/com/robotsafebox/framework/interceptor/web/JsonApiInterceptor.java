@@ -32,16 +32,13 @@ public class JsonApiInterceptor extends HandlerInterceptorAdapter {
 //        log.info("==============执行顺序: 1、preHandle================");
 //        log.info(DigestUtils.md5DigestAsHex(Constant.API_CHECK_TOKEN.getBytes()));
         String token = request.getParameter(Constant.API_TOKEN);
-        System.out.println(token);
         String userId = ApiTokenTool.getUserIdByToken(token);
-
         Boolean noPermission = false;
         if (userId == null) {
             noPermission = true;
         } else {
-            //todo判断id是否存在（此处暂时不做判断，可以提高一定效率；而且随机加密秘钥和加密盐可以保证很大程度的安全性了）
+            //todo判断id是否存在（此处暂时不做判断了，可以提高一定效率；而且随机加密秘钥和加密盐可以保证很大程度的安全性了）
         }
-
         if (noPermission) {
             response.setCharacterEncoding(Constant.UTF_8);
             response.setContentType(Constant.CONTENT_TYPE_JSON);
@@ -51,7 +48,6 @@ public class JsonApiInterceptor extends HandlerInterceptorAdapter {
             response.getWriter().append(JSONObject.toJSONString(jsonResult).toString());
             return false;
         }
-
         return true;
     }
 

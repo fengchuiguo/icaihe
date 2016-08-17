@@ -54,11 +54,11 @@ CREATE TABLE `ich_user`(
 
 CREATE TABLE `ich_group`(
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
-  `xxxxx`  DATE   COMMENT 'xxxxx',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
+  `group_name` varchar(100)  COMMENT '企业组织名称',
+  `group_create_time`  DATE   COMMENT '企业组织创立日期',
+  `group_address` varchar(150)  COMMENT '企业组织地址',
+  `address_x` varchar(50)  COMMENT '地图X坐标',
+  `address_y` varchar(50)  COMMENT '地图Y坐标',
   `create_time` TIMESTAMP  COMMENT '创建时间',
   `update_time` TIMESTAMP  COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -68,12 +68,12 @@ CREATE TABLE `ich_group`(
 
 CREATE TABLE `ich_box`(
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
-  `xxxxx`  BIGINT   COMMENT 'xxxxx',
+  `ich_id` varchar(100)  COMMENT 'ICHID',
+  `ibeacon_id` varchar(100)  COMMENT 'iBeacon广播ID',
+  `wifi_id` varchar(100)  COMMENT 'WIFI ID',
+  `wifi_password` varchar(100)  COMMENT 'WIFI 密码',
+  `box_name` varchar(100)  COMMENT '财盒昵称',
+  `group_id`  BIGINT   COMMENT '群组ID',
   `create_time` TIMESTAMP  COMMENT '创建时间',
   `update_time` TIMESTAMP  COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -83,10 +83,10 @@ CREATE TABLE `ich_box`(
 
 CREATE TABLE `ich_group_member`(
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `xxxxx`  BIGINT   COMMENT 'xxxxx',
-  `xxxxx`  BIGINT   COMMENT 'xxxxx',
-  `xxxxx`  DATE   COMMENT 'xxxxx',
-  `xxxxx`  TINYINT   COMMENT 'xxxxx',
+  `group_id`  BIGINT   COMMENT '群组id',
+  `user_id`  BIGINT   COMMENT '用户id',
+  `join_date`  DATE   COMMENT '加入组织日期',
+  `type`  TINYINT   COMMENT '成员类型',
   `create_time` TIMESTAMP  COMMENT '创建时间',
   `update_time` TIMESTAMP  COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -96,9 +96,9 @@ CREATE TABLE `ich_group_member`(
 
 CREATE TABLE `ich_box_user`(
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `xxxxx`  BIGINT   COMMENT 'xxxxx',
-  `xxxxx`  BIGINT   COMMENT 'xxxxx',
-  `xxxxx`  TINYINT   COMMENT 'xxxxx',
+  `box_id`  BIGINT   COMMENT '保险箱id',
+  `user_id`  BIGINT   COMMENT '用户id',
+  `type`  TINYINT   COMMENT '权限类型',
   `create_time` TIMESTAMP  COMMENT '创建时间',
   `update_time` TIMESTAMP  COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -108,11 +108,11 @@ CREATE TABLE `ich_box_user`(
 
 CREATE TABLE `ich_box_record`(
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `xxxxx`  BIGINT   COMMENT 'xxxxx',
-  `xxxxx`  BIGINT   COMMENT 'xxxxx',
-  `xxxxx`  TINYINT   COMMENT 'xxxxx',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
-  `xxxxx`  TIMESTAMP   COMMENT 'xxxxx',
+  `box_id`  BIGINT   COMMENT '保险箱id',
+  `user_id`  BIGINT   COMMENT '用户id',
+  `type`  TINYINT   COMMENT '操作类型',
+  `remark` varchar(500)  COMMENT '备注',
+  `back_time`  TIMESTAMP   COMMENT '预计归还日期',
   `create_time` TIMESTAMP  COMMENT '创建时间',
   `update_time` TIMESTAMP  COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -122,10 +122,10 @@ CREATE TABLE `ich_box_record`(
 
 CREATE TABLE `ich_box_message`(
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `xxxxx`  BIGINT   COMMENT 'xxxxx',
-  `xxxxx`  BIGINT   COMMENT 'xxxxx',
-  `xxxxx`  TINYINT   COMMENT 'xxxxx',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
+  `box_id`  BIGINT   COMMENT '保险箱id',
+  `user_id`  BIGINT   COMMENT '通知用户id',
+  `type`  TINYINT   COMMENT '事件类型',
+  `message` varchar(255)  COMMENT '消息内容',
   `create_time` TIMESTAMP  COMMENT '创建时间',
   `update_time` TIMESTAMP  COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -135,10 +135,13 @@ CREATE TABLE `ich_box_message`(
 
 CREATE TABLE `ich_suggestion`(
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `xxxxx`  BIGINT   COMMENT 'xxxxx',
-  `xxxxx` varchar(xxxxx)  COMMENT 'xxxxx',
+  `user_id`  BIGINT  COMMENT '用户id',
+  `message` varchar(500)  COMMENT '反馈内容',
   `create_time` TIMESTAMP  COMMENT '创建时间',
   `update_time` TIMESTAMP  COMMENT '修改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='意见反馈表';
+
+
+
 
