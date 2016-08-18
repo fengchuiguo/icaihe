@@ -52,6 +52,7 @@ group.addressY
 /api/v1/group/list
 [POST]
 groupName
+
 返回data包含:
 groupId
 groupName
@@ -148,6 +149,8 @@ head
 
 ---用户动态
 /api/v1/boxRecord/userRecord/list
+[GET]
+
 返回data包含:
 id
 userHead
