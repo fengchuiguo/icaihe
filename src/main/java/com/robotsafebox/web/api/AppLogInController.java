@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-@RequestMapping("/appInit")  // url:  /模块/资源/{id}细分
+@RequestMapping("/initApi/")  // url:  /模块/资源/{id}细分
 public class AppLogInController extends BaseAppController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -48,7 +48,7 @@ public class AppLogInController extends BaseAppController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
-    public JsonResult login(@RequestParam("phone") String phone, @RequestParam("code") int code) {
+    public JsonResult login(@RequestParam("phone") String phone, @RequestParam("code") String code) {
         JsonResult jsonResult = new JsonResult();
         try {
 
@@ -71,7 +71,7 @@ public class AppLogInController extends BaseAppController {
      */
     @RequestMapping(value = "/sendCode", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
-    public JsonResult sendCode(@RequestParam("phone") String phone) {
+    public JsonResult sendCode(@RequestParam("phone") String phone,@RequestParam("type") Integer type) {
         JsonResult jsonResult = new JsonResult();
         try {
             //todo 发送验证码

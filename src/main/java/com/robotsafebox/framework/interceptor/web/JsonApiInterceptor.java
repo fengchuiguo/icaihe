@@ -44,7 +44,8 @@ public class JsonApiInterceptor extends HandlerInterceptorAdapter {
             response.setContentType(Constant.CONTENT_TYPE_JSON);
             JsonResult jsonResult = new JsonResult();
             jsonResult.setMessage(Constant.NO_PERMISSION_MESSAGE);
-            jsonResult.setStateNoPermission();
+//            jsonResult.setStateNoPermission();
+            jsonResult.setStateUnlogin();
             response.getWriter().append(JSONObject.toJSONString(jsonResult).toString());
             return false;
         }
