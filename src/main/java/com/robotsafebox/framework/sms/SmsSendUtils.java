@@ -20,7 +20,7 @@ public class SmsSendUtils {
         }
         try {
 
-            YPSmsSendUtils.sendSms(PropertiesConfig.getSmsConfigByKey("yunpian_APIKEY"), text, mobile);
+            return YPSmsSendUtils.sendSms(PropertiesConfig.getSmsConfigByKey("yunpian_APIKEY"), text, mobile);
 
         } catch (IOException e) {
             e.printStackTrace();

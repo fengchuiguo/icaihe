@@ -125,4 +125,12 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <!--new add-->
+  <select id="selectByPhone" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select * from ich_user where phone=#{phone,jdbcType=VARCHAR}
+  </select>
+
+
 </mapper>

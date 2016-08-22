@@ -1,6 +1,7 @@
 package com.robotsafebox.dao;
 
 import com.robotsafebox.entity.User;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +15,8 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+//    new add
+    User selectByPhone(@Param("phone") String phone);
+
 }
