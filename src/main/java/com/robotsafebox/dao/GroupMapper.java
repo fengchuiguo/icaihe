@@ -1,6 +1,9 @@
 package com.robotsafebox.dao;
 
 import com.robotsafebox.entity.Group;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface GroupMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +17,13 @@ public interface GroupMapper {
     int updateByPrimaryKeySelective(Group record);
 
     int updateByPrimaryKey(Group record);
+
+
+
+//    new add
+    Group selectByGroupName(@Param("groupName") String groupName);
+
+    List<Group> selectByLikeGroupName(@Param("groupName") String groupName);
+
+
 }

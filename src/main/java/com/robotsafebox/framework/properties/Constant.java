@@ -12,11 +12,13 @@ public class Constant {
 
     public static final String CONTENT_TYPE_PDF = "application/pdf; charset=" + UTF_8;
 
+    public static final String SUCCESS_MESSAGE = "Success";
     public static final String EXCEPTION_MESSAGE = "Server busy, please try again later ";
 
     public static final String NO_PERMISSION_MESSAGE = "No permission to access ";
 
 //  API
+    public static final String API_SESSION_USERID = "ApiUserId";
     public static final String API_HEAD_URL = "/api/v1";
 
     public static final String API_TOKEN = "token";

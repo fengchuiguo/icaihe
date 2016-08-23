@@ -126,4 +126,25 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <!--new add-->
+  <select id="selectByGroupName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from ich_group
+    where group_name = #{groupName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByLikeGroupName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from ich_group
+    where 1=1
+    <if test="groupName != null">
+      AND group_name like CONCAT('%',#{groupName,jdbcType=VARCHAR},'%' )
+    </if>
+    ORDER BY group_name
+  </select>
+
 </mapper>

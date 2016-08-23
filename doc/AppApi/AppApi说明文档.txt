@@ -40,12 +40,12 @@ type （登录的地方传入“1”）
 ---创建财盒群
 /api/v1/group/add
 [POST]
-group.groupName
+groupName
 creatorName
-group.groupCreateTime
-group.groupAddress
-group.addressX
-group.addressY
+gCreateTime
+groupAddress
+addressX
+addressY
 
 
 ---搜索财盒群

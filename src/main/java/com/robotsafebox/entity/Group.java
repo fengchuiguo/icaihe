@@ -1,5 +1,8 @@
 package com.robotsafebox.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -38,6 +41,8 @@ public class Group implements Serializable {
         this.groupName = groupName;
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getGroupCreateTime() {
         return groupCreateTime;
     }
@@ -70,6 +75,8 @@ public class Group implements Serializable {
         this.addressY = addressY;
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getCreateTime() {
         return createTime;
     }
@@ -78,6 +85,8 @@ public class Group implements Serializable {
         this.createTime = createTime;
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -99,13 +108,13 @@ public class Group implements Serializable {
         }
         Group other = (Group) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getGroupName() == null ? other.getGroupName() == null : this.getGroupName().equals(other.getGroupName()))
-            && (this.getGroupCreateTime() == null ? other.getGroupCreateTime() == null : this.getGroupCreateTime().equals(other.getGroupCreateTime()))
-            && (this.getGroupAddress() == null ? other.getGroupAddress() == null : this.getGroupAddress().equals(other.getGroupAddress()))
-            && (this.getAddressX() == null ? other.getAddressX() == null : this.getAddressX().equals(other.getAddressX()))
-            && (this.getAddressY() == null ? other.getAddressY() == null : this.getAddressY().equals(other.getAddressY()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+                && (this.getGroupName() == null ? other.getGroupName() == null : this.getGroupName().equals(other.getGroupName()))
+                && (this.getGroupCreateTime() == null ? other.getGroupCreateTime() == null : this.getGroupCreateTime().equals(other.getGroupCreateTime()))
+                && (this.getGroupAddress() == null ? other.getGroupAddress() == null : this.getGroupAddress().equals(other.getGroupAddress()))
+                && (this.getAddressX() == null ? other.getAddressX() == null : this.getAddressX().equals(other.getAddressX()))
+                && (this.getAddressY() == null ? other.getAddressY() == null : this.getAddressY().equals(other.getAddressY()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
 
     @Override

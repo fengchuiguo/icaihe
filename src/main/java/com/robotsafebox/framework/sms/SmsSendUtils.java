@@ -16,11 +16,12 @@ public class SmsSendUtils {
         if (StringUtils.isNotBlank(customerContent)) {
             text = customerContent;
         } else {
-            text = "您的验证码是：" + numCode + "。";
+            text = "您的验证码是" + numCode;
         }
+        text = "【i财盒】" + text;
         try {
 
-            return YPSmsSendUtils.sendSms(PropertiesConfig.getSmsConfigByKey("yunpian_APIKEY"), text, mobile);
+            YPSmsSendUtils.sendSms(PropertiesConfig.getSmsConfigByKey("yunpian_APIKEY"), text, mobile);
 
         } catch (IOException e) {
             e.printStackTrace();

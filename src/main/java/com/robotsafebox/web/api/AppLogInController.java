@@ -8,10 +8,8 @@ import com.robotsafebox.framework.sms.SmsSendUtils;
 import com.robotsafebox.framework.tools.ApiTokenTool;
 import com.robotsafebox.framework.tools.CodeCheckTool;
 import com.robotsafebox.framework.utils.RandomUtil;
-import com.robotsafebox.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,13 +21,10 @@ import java.util.Date;
 
 
 @Controller
-@RequestMapping("/initApi/")  // url:  /模块/资源/{id}细分
+@RequestMapping("/initApi")  // url:  /模块/资源/{id}细分
 public class AppLogInController extends BaseAppController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    private UserService userService;
 
     /**
      * 此接口暂时无用
@@ -65,17 +60,17 @@ public class AppLogInController extends BaseAppController {
         JsonResult jsonResult = new JsonResult();
         try {
 
-            //todo 登录
-
-            Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
-            if (smscode == null) {
-                jsonResult.setMessage("请重新获取验证码！");
-                return jsonResult;
-            }
-            if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
-                jsonResult.setMessage("验证码错误！");
-                return jsonResult;
-            }
+//            //todo start-测试时候，注释掉，发布前需要注释回来
+//            Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
+//            if (smscode == null) {
+//                jsonResult.setMessage("请重新获取验证码！");
+//                return jsonResult;
+//            }
+//            if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
+//                jsonResult.setMessage("验证码错误！");
+//                return jsonResult;
+//            }
+//            //todo end--测试时候，注释掉，发布前需要注释回来
 
             //用户不存在的话，注册新用户
             User checkUser = userService.getUser(phone);
@@ -83,10 +78,14 @@ public class AppLogInController extends BaseAppController {
                 User newUser = new User();
                 newUser.setPhone(phone);
                 newUser.setCreateTime(new Date());
-                userService.addUser(newUser);
+                userService.saveUser(newUser);
             }
+
             User nowUser = userService.getUser(phone);
             String token = ApiTokenTool.getToken(nowUser.getId().toString());
+
+            httpSession.removeAttribute(CodeCheckTool.SMS_CODE);
+
             jsonResult.setData(token);
             jsonResult.setMessage("登录成功！");
             jsonResult.setStateSuccess();

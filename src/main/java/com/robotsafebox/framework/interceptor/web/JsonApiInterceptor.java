@@ -5,12 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.robotsafebox.base.json.JsonResult;
 import com.robotsafebox.framework.properties.Constant;
 import com.robotsafebox.framework.tools.ApiTokenTool;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class JsonApiInterceptor extends HandlerInterceptorAdapter {
 
@@ -31,13 +31,31 @@ public class JsonApiInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 //        log.info("==============执行顺序: 1、preHandle================");
 //        log.info(DigestUtils.md5DigestAsHex(Constant.API_CHECK_TOKEN.getBytes()));
+
+        System.out.println("【getCharacterEncoding】"+request.getCharacterEncoding());
+        System.out.println("【getCharacterEncoding】"+response.getCharacterEncoding());
+        System.out.println("【creatorName】" + request.getParameter("creatorName"));
+        System.out.println("【groupName】" + request.getParameter("groupName"));
+        String str=new String((request.getParameter("creatorName")).getBytes("ISO-8859-1"),"UTF-8");
+        String str2=new String((request.getParameter("groupName")).getBytes("iso-8859-1"),"utf-8");
+        System.out.println("str【creatorName】" + str);
+        System.out.println("str2【groupName】" + str2);
+
         String token = request.getParameter(Constant.API_TOKEN);
         String userId = ApiTokenTool.getUserIdByToken(token);
         Boolean noPermission = false;
         if (userId == null) {
             noPermission = true;
         } else {
-            //todo判断id是否存在（此处暂时不做判断了，可以提高一定效率；而且随机加密秘钥和加密盐可以保证很大程度的安全性了）
+            HttpSession session = request.getSession();
+            if (session.getAttribute(Constant.API_SESSION_USERID) == null) {
+                session.setAttribute(Constant.API_SESSION_USERID, userId);
+            } else {
+                if (!userId.equals(session.getAttribute(Constant.API_SESSION_USERID))) {
+                    session.removeAttribute(Constant.API_SESSION_USERID);
+                    session.setAttribute(Constant.API_SESSION_USERID, userId);
+                }
+            }
         }
         if (noPermission) {
             response.setCharacterEncoding(Constant.UTF_8);

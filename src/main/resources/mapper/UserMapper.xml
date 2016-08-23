@@ -129,7 +129,9 @@
 
   <!--new add-->
   <select id="selectByPhone" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select * from ich_user where phone=#{phone,jdbcType=VARCHAR}
+    select
+    <include refid="Base_Column_List"/>
+    from ich_user where phone=#{phone,jdbcType=VARCHAR}
   </select>
 
 
