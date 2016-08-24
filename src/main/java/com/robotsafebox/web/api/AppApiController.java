@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(Constant.API_HEAD_URL)  // url:  /模块/资源/{id}细分
@@ -333,7 +334,7 @@ public class AppApiController extends BaseAppController {
 //    }
 
 //    //查看开箱记录
-//    @RequestMapping(value = "xxx/xxx", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+//    @RequestMapping(value = "/boxRecord/openRecord/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
 //    @ResponseBody
 //    public JsonResult xxxx(String xxxx) {
 //        JsonResult jsonResult = new JsonResult();
@@ -350,23 +351,22 @@ public class AppApiController extends BaseAppController {
 //        return jsonResult;
 //    }
 
-//    //查看群成员
-//    @RequestMapping(value = "xxx/xxx", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
-//    @ResponseBody
-//    public JsonResult xxxx(String xxxx) {
-//        JsonResult jsonResult = new JsonResult();
-//        try {
-////          todo：xxx
-//
-////            jsonResult.setData(xxx);
-////            jsonResult.setMessage("xxxx");
-//            jsonResult.setStateSuccess();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
-//        }
-//        return jsonResult;
-//    }
+    //查看群成员
+    @RequestMapping(value = "/groupMember/{groupId}/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult groupMemberList(@PathVariable("groupId") Long groupId) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            List<Map> mapList = groupMemberService.searchGroupMemberByGroupId(groupId);
+            jsonResult.setData(mapList);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
 
 
     //意见反馈

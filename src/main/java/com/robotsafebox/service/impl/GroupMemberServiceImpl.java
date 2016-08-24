@@ -6,6 +6,8 @@ import com.robotsafebox.service.GroupMemberService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class GroupMemberServiceImpl implements GroupMemberService {
@@ -17,6 +19,11 @@ public class GroupMemberServiceImpl implements GroupMemberService {
             return groupMemberMapper.updateByPrimaryKeySelective(groupMember);
         }
         return groupMemberMapper.insertSelective(groupMember);
+    }
+
+    @Override
+    public List<Map> searchGroupMemberByGroupId(Long groupId) {
+        return groupMemberMapper.selectGroupMemberByGroupId(groupId);
     }
 
 }
