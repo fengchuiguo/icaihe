@@ -60,17 +60,17 @@ public class AppLogInController extends BaseAppController {
         JsonResult jsonResult = new JsonResult();
         try {
 
-//            //todo start-测试时候，注释掉，发布前需要注释回来
-//            Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
-//            if (smscode == null) {
-//                jsonResult.setMessage("请重新获取验证码！");
-//                return jsonResult;
-//            }
-//            if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
-//                jsonResult.setMessage("验证码错误！");
-//                return jsonResult;
-//            }
-//            //todo end--测试时候，注释掉，发布前需要注释回来
+            //todo start-测试时候，注释掉，发布前需要注释回来
+            Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
+            if (smscode == null) {
+                jsonResult.setMessage("请重新获取验证码！");
+                return jsonResult;
+            }
+            if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
+                jsonResult.setMessage("验证码错误！");
+                return jsonResult;
+            }
+            //todo end--测试时候，注释掉，发布前需要注释回来
 
             //用户不存在的话，注册新用户
             User checkUser = userService.getUser(phone);
