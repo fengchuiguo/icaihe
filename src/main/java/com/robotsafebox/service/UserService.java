@@ -4,7 +4,7 @@ import com.robotsafebox.entity.User;
 
 public interface UserService {
 
-    User getUser(Integer id);
+    User getUser(Long id);
 
     User getUser(String phone);
 

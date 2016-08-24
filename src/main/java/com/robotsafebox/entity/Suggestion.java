@@ -1,5 +1,8 @@
 package com.robotsafebox.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -40,6 +43,8 @@ public class Suggestion implements Serializable {
         this.message = message;
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getCreateTime() {
         return createTime;
     }
@@ -48,6 +53,8 @@ public class Suggestion implements Serializable {
         this.createTime = createTime;
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }

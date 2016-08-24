@@ -13,8 +13,8 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
 
-    public User getUser(Integer id) {
-        return userMapper.selectByPrimaryKey(Long.valueOf(id));
+    public User getUser(Long id) {
+        return userMapper.selectByPrimaryKey(id);
     }
 
     public User getUser(String phone) {

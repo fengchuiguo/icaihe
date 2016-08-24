@@ -15,11 +15,11 @@ public class BaseAppController {
     @Autowired
     protected UserService userService;
 
-    protected Integer getCurrentUserId() {
+    protected Long getCurrentUserId() {
         HttpServletRequest request = getRequest();
         HttpSession session = request.getSession();
         if (session.getAttribute(Constant.API_SESSION_USERID) != null) {
-            return Integer.valueOf((String) session.getAttribute(Constant.API_SESSION_USERID));
+            return Long.valueOf((String) session.getAttribute(Constant.API_SESSION_USERID));
         }
         return null;
     }

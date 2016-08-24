@@ -1,5 +1,8 @@
 package com.robotsafebox.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -44,6 +47,8 @@ public class GroupMember implements Serializable {
         this.userId = userId;
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getJoinDate() {
         return joinDate;
     }
@@ -60,6 +65,8 @@ public class GroupMember implements Serializable {
         this.type = type;
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getCreateTime() {
         return createTime;
     }
@@ -68,6 +75,8 @@ public class GroupMember implements Serializable {
         this.createTime = createTime;
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }
