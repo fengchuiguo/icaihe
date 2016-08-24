@@ -19,4 +19,10 @@ public class BoxServiceImpl implements BoxService {
         }
         return boxMapper.insertSelective(box);
     }
+
+    public Box getBox(Long id) {
+        return boxMapper.selectByPrimaryKey(id);
+    }
+
+
 }

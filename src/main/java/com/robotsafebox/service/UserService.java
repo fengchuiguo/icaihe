@@ -10,4 +10,6 @@ public interface UserService {
 
     int saveUser(User user);
 
+    User getCreateUserByBoxId(Long boxId);
+
 }

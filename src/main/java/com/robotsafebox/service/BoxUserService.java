@@ -7,4 +7,6 @@ public interface BoxUserService {
 
     int saveBoxUser(BoxUser boxUser);
 
+    int delteBoxUser(Long id);
+
 }

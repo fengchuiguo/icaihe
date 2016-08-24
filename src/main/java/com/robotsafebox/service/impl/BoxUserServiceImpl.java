@@ -19,4 +19,8 @@ public class BoxUserServiceImpl implements BoxUserService {
         }
         return boxUserMapper.insertSelective(boxUser);
     }
+
+    public int delteBoxUser(Long id) {
+        return boxUserMapper.deleteByPrimaryKey(id);
+    }
 }

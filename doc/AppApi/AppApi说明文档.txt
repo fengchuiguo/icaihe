@@ -63,8 +63,9 @@ groupName
 
 
 ---加入财盒群
-/api/v1/group/{groupId}/join
+/api/v1/group/join
 [POST]
+groupId
 userName
 joinDate
 
@@ -72,12 +73,12 @@ joinDate
 ---添加财盒
 /api/v1/box/add
 [POST]
-box.ichId
-box.ibeaconId
-box.wifiId
-box.wifiPassword
-box.boxName
-box.groupId
+ichId
+ibeaconId
+wifiId
+wifiPassword
+boxName
+groupId
 
 
 ---查看财盒
@@ -128,16 +129,14 @@ authority  (‘0’表示未授权开箱，‘1’表示已经授权开箱)
 ---授权开箱
 /api/v1/boxUser/add
 [POST]
-boxUser.boxId
-boxUser.userId
-boxUser.type   (此处‘1’)
+boxId
+userId
 
 ---取消开箱授权
 /api/v1/boxUser/delete
 [POST]
-boxUser.boxId
-boxUser.userId
-boxUser.type   (此处‘1’)
+boxId
+userId
 
 
 

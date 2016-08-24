@@ -27,4 +27,8 @@ public class UserServiceImpl implements UserService {
         }
         return userMapper.insertSelective(user);
     }
+
+    public User getCreateUserByBoxId(Long boxId) {
+        return userMapper.selectCreateUserByBoxId(boxId);
+    }
 }

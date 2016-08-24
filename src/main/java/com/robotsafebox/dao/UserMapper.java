@@ -16,7 +16,10 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
-//    new add
+
+    //new add
     User selectByPhone(@Param("phone") String phone);
+
+    User selectCreateUserByBoxId(@Param("boxId") Long boxId);
 
 }

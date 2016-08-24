@@ -7,4 +7,6 @@ public interface BoxService {
 
     int saveBox(Box box);
 
+    Box getBox(Long id);
+
 }
