@@ -167,7 +167,7 @@
                 </li>
 
                     <li>
-                        <a href="${path}/adminLogOut" data-toggle="control-sidebar"><i class="fa fa-power-off"></i>
+                        <a href="${path}/adminLogOut"><i class="fa fa-power-off"></i>
                             退出</a>
                     </li>
 
