@@ -22,4 +22,6 @@ public interface UserMapper {
 
     User selectCreateUserByBoxId(@Param("boxId") Long boxId);
 
+    User selectCreateUserByGroupId(@Param("groupId") Long groupId);
+
 }

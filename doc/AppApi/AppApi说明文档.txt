@@ -31,6 +31,10 @@ code
 token
 userFlag  （用户标识:‘old’表示老用户，'new'表示新用户）
 user  用户信息
+createFlag (是否创始人："yes" 或者 ”no“)
+createGroupList  （创建的群组）
+memberFlag (是否是成员："yes" 或者 ”no“)
+memberGroupList  （所属的群组）
 
 ---短信验证码
 /initApi/sendCode
@@ -103,7 +107,7 @@ createTime
 ---开箱握手协议
 /api/v1/agreement/openBox/detail
 [POST]
-ichId
+id
 key
 
 ---外借
@@ -121,6 +125,8 @@ backTime
 ---授权管理列表
 /api/v1/groupMember/{groupId}/{boxId}/list
 [GET]
+
+返回data包含:
 userId
 userHead
 userName
@@ -145,10 +151,11 @@ userId
 /api/v1/user/detail
 [GET]
 返回data包含:
-id
-phone
-name
-head
+user （用户）
+createFlag (是否创始人："yes" 或者 ”no“)
+createGroupList  （创建的群组）
+memberFlag (是否是成员："yes" 或者 ”no“)
+memberGroupList  （所属的群组）
 
 ---用户动态
 /api/v1/boxRecord/userRecord/list
@@ -156,8 +163,8 @@ head
 
 返回data包含:
 id
-userHead
 userName
+userHead
 createTime
 remark
 
@@ -166,15 +173,13 @@ remark
 /api/v1/boxRecord/openRecord/list
 [POST]
 boxId
-boxName
-userId
 userName
-(上面均为可选非必填参数)
+
 
 返回data包含:
 id
-userHead
 userName
+userHead
 createTime
 remark
 

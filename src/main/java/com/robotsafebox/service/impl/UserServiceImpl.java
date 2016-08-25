@@ -31,4 +31,8 @@ public class UserServiceImpl implements UserService {
     public User getCreateUserByBoxId(Long boxId) {
         return userMapper.selectCreateUserByBoxId(boxId);
     }
+
+    public User getCreateUserByGroupId(Long groupId) {
+        return userMapper.selectCreateUserByGroupId(groupId);
+    }
 }

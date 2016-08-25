@@ -12,4 +12,6 @@ public interface GroupService {
 
     List<Group> searchGroup(String groupName);
 
+    List<Group> searchGroupByUserIdAndMemberType(Long userId,Byte type);
+
 }

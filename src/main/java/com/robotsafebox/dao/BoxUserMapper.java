@@ -1,6 +1,9 @@
 package com.robotsafebox.dao;
 
 import com.robotsafebox.entity.BoxUser;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface BoxUserMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +17,8 @@ public interface BoxUserMapper {
     int updateByPrimaryKeySelective(BoxUser record);
 
     int updateByPrimaryKey(BoxUser record);
+
+    //    new add
+    List<BoxUser> selectBoxUser(@Param("boxId") Long boxId, @Param("type") Byte type, @Param("userId") Long userId);
+
 }

@@ -32,4 +32,8 @@ public class GroupServiceImpl implements GroupService {
         return groupMapper.selectByLikeGroupName(groupName);
     }
 
+    public List<Group> searchGroupByUserIdAndMemberType(Long userId, Byte type) {
+        return groupMapper.selectByGroupByUserIdAndMemberType(userId, type);
+    }
+
 }

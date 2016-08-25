@@ -147,4 +147,15 @@
     ORDER BY group_name
   </select>
 
+  <select id="selectByGroupByUserIdAndMemberType" resultMap="BaseResultMap">
+    select
+     g.id id, g.group_name group_name, g.group_create_time group_create_time, g.group_address group_address, g.address_x address_x,
+     g.address_y address_y, g.create_time create_time, g.update_time update_time
+    from ich_group g
+    LEFT JOIN ich_group_member gm
+    ON g.id=gm.group_id
+    where gm.user_id = #{userId,jdbcType=BIGINT} AND gm.type = #{type,jdbcType=TINYINT}
+    ORDER BY g.create_time
+  </select>
+
 </mapper>

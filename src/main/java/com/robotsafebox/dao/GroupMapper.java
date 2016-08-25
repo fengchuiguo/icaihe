@@ -19,11 +19,12 @@ public interface GroupMapper {
     int updateByPrimaryKey(Group record);
 
 
-
-//    new add
+    //    new add
     Group selectByGroupName(@Param("groupName") String groupName);
 
     List<Group> selectByLikeGroupName(@Param("groupName") String groupName);
+
+    List<Group> selectByGroupByUserIdAndMemberType(@Param("userId") Long userId, @Param("type") Byte type);
 
 
 }

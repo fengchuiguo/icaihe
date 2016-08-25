@@ -2,14 +2,17 @@ package com.robotsafebox.web.api;
 
 import com.robotsafebox.base.json.JsonResult;
 import com.robotsafebox.base.web.BaseAppController;
+import com.robotsafebox.entity.Group;
 import com.robotsafebox.entity.User;
 import com.robotsafebox.framework.properties.Constant;
 import com.robotsafebox.framework.sms.SmsSendUtils;
 import com.robotsafebox.framework.tools.ApiTokenTool;
 import com.robotsafebox.framework.tools.CodeCheckTool;
 import com.robotsafebox.framework.utils.RandomUtil;
+import com.robotsafebox.service.GroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,9 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Controller
@@ -27,6 +28,10 @@ import java.util.Map;
 public class AppLogInController extends BaseAppController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
+    @Autowired
+    protected GroupService groupService;
 
     /**
      * 此接口暂时无用
@@ -90,7 +95,7 @@ public class AppLogInController extends BaseAppController {
 
             httpSession.removeAttribute(CodeCheckTool.SMS_CODE);
 
-            Map resultMap = new HashMap();
+            Map resultMap = new LinkedHashMap();
             //token
             resultMap.put("token", token);
             //userFlag用户标识:  old老用户  new新用户
@@ -98,11 +103,27 @@ public class AppLogInController extends BaseAppController {
             //用户信息
             resultMap.put("user", newUser);
 
-            //todo 是否创始人
-            //todo 创建的群组
+            //是否创始人
+            //创建的群组
+            List<Group> groupList0 = groupService.searchGroupByUserIdAndMemberType(newUser.getId(), (byte) 0);
+            if (groupList0 != null && groupList0.size() > 0) {
+                resultMap.put("createFlag", "yes");
+                resultMap.put("createGroupList", groupList0);
+            } else {
+                resultMap.put("createFlag", "no");
+                resultMap.put("createGroupList", null);
+            }
 
-            //todo 是否是成员
-            //todo 所属的群组
+            //是否是成员
+            //所属的群组
+            List<Group> groupList1 = groupService.searchGroupByUserIdAndMemberType(newUser.getId(), (byte) 1);
+            if (groupList1 != null && groupList1.size() > 0) {
+                resultMap.put("memberFlag", "yes");
+                resultMap.put("memberGroupList", groupList1);
+            } else {
+                resultMap.put("memberFlag", "no");
+                resultMap.put("memberGroupList", null);
+            }
 
             jsonResult.setData(resultMap);
             jsonResult.setMessage(userFlag.equals("old") ? "登录成功！" : "注册成功！");

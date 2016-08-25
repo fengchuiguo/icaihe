@@ -4,16 +4,15 @@ import com.robotsafebox.base.json.JsonResult;
 import com.robotsafebox.base.web.BaseAppController;
 import com.robotsafebox.entity.*;
 import com.robotsafebox.framework.properties.Constant;
+import com.robotsafebox.framework.tools.AgreementTool;
 import com.robotsafebox.framework.utils.DateUtil;
 import com.robotsafebox.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping(Constant.API_HEAD_URL)  // url:  /模块/资源/{id}细分
@@ -101,6 +100,8 @@ public class AppApiController extends BaseAppController {
         JsonResult jsonResult = new JsonResult();
         try {
 
+//          todo不予许重复加入
+
             GroupMember groupMember = new GroupMember();
             groupMember.setGroupId(groupId);
             groupMember.setUserId(getCurrentUserId());
@@ -130,6 +131,13 @@ public class AppApiController extends BaseAppController {
     public JsonResult boxAdd(Box box) {
         JsonResult jsonResult = new JsonResult();
         try {
+            //权限(群组创建人才可以添加财盒)
+            User checkUser = userService.getCreateUserByGroupId(box.getGroupId());
+            if (!checkUser.getId().equals(getCurrentUserId())) {
+                jsonResult.setMessage("无操作权限！");
+                return jsonResult;
+            }
+
             box.setCreateTime(DateUtil.getCurrentDateTime());
             boxService.saveBox(box);
 
@@ -157,6 +165,14 @@ public class AppApiController extends BaseAppController {
     public JsonResult boxDetail(@PathVariable("id") Long id) {
         JsonResult jsonResult = new JsonResult();
         try {
+            //权限
+            //判断是否有开箱的权限
+            List<BoxUser> boxUsers = boxUserService.searchBoxUser(id, (byte) 1, getCurrentUserId());
+            if (boxUsers == null || boxUsers.size() < 1) {
+                jsonResult.setMessage("您无开箱权限！");
+                return jsonResult;
+            }
+
             Box box = boxService.getBox(id);
             jsonResult.setData(box);
             jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
@@ -174,6 +190,17 @@ public class AppApiController extends BaseAppController {
     public JsonResult boxRecordAdd(@PathVariable("type") int type, @PathVariable("boxId") Long boxId) {
         JsonResult jsonResult = new JsonResult();
         try {
+            if (type != 1 && type != 4 && type != 5) {
+                jsonResult.setMessage("参数有误！");
+                return jsonResult;
+            }
+            //判断是否有开箱的权限
+            List<BoxUser> boxUsers = boxUserService.searchBoxUser(boxId, (byte) 1, getCurrentUserId());
+            if (boxUsers == null || boxUsers.size() < 1) {
+                jsonResult.setMessage("您无开箱权限！");
+                return jsonResult;
+            }
+
 //            外借(type=4)的时候
             String backTime = getRequest().getParameter("backTime");
             BoxRecord boxRecord = new BoxRecord();
@@ -184,6 +211,7 @@ public class AppApiController extends BaseAppController {
                 boxRecord.setBackTime(DateUtil.string2Date(backTime, DateUtil.FORMAT_DATE));
             }
             boxRecord.setCreateTime(DateUtil.getCurrentDateTime());
+            boxRecord.setRemark(type == 1 ? "开了财盒" : (type == 4 ? "外借" : (type == 5 ? "即借即还" : "")));
             boxRecordService.saveBoxRecord(boxRecord);
 
             jsonResult.setData(boxRecord);
@@ -196,42 +224,77 @@ public class AppApiController extends BaseAppController {
         return jsonResult;
     }
 
-//    //开箱握手协议
-//    @RequestMapping(value = "xxx/xxx", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
-//    @ResponseBody
-//    public JsonResult xxxx(String xxxx) {
-//        JsonResult jsonResult = new JsonResult();
-//        try {
-////          todo：xxx
-//
-////            jsonResult.setData(xxx);
-////            jsonResult.setMessage("xxxx");
-//            jsonResult.setStateSuccess();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
-//        }
-//        return jsonResult;
-//    }
+    //开箱握手协议
+    @RequestMapping(value = "/agreement/openBox/detail", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult agreementOpenBoxDetail(Long id, String key) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            //判断是否有开箱的权限
+            List<BoxUser> boxUsers = boxUserService.searchBoxUser(id, (byte) 1, getCurrentUserId());
+            if (boxUsers == null || boxUsers.size() < 1) {
+                jsonResult.setMessage("您无开箱权限！");
+                return jsonResult;
+            }
+            String result = AgreementTool.getOpenBoxAgreement(key);
+            jsonResult.setData(result);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
 
 
-//    //授权管理列表
-//    @RequestMapping(value = "xxx/xxx", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
-//    @ResponseBody
-//    public JsonResult xxxx(String xxxx) {
-//        JsonResult jsonResult = new JsonResult();
-//        try {
-////          todo：xxx
-//
-////            jsonResult.setData(xxx);
-////            jsonResult.setMessage("xxxx");
-//            jsonResult.setStateSuccess();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
-//        }
-//        return jsonResult;
-//    }
+    //授权管理列表
+    @RequestMapping(value = "/groupMember/{groupId}/{boxId}/list", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult groupMemberGroupIdBoxIdList(@PathVariable("groupId") Long groupId, @PathVariable("boxId") Long boxId) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            //判断该箱子是否存在，是否属于该群组
+            Box box = boxService.getBox(boxId);
+            if (box == null || !groupId.equals(box.getGroupId())) {
+                jsonResult.setMessage("您无该保险箱");
+                return jsonResult;
+            }
+            //权限(群组创建人才可以添加财盒)
+            User checkUser = userService.getCreateUserByGroupId(groupId);
+            if (!checkUser.getId().equals(getCurrentUserId())) {
+                jsonResult.setMessage("无操作权限！");
+                return jsonResult;
+            }
+
+            //判断是否已经授权
+            List<Map> mapList = groupMemberService.searchGroupMemberByGroupId(groupId);
+            if (mapList != null && mapList.size() > 0) {
+                List<BoxUser> boxUsers = boxUserService.searchBoxUser(boxId, (byte) 1, null);
+                Long userId;
+//                authority  (‘0’表示未授权开箱，‘1’表示已经授权开箱)
+                Integer authority;
+                for (Map itemMap : mapList) {
+                    authority = 0;
+                    userId = (Long) itemMap.get("userId");
+                    for (BoxUser boxUser : boxUsers) {
+                        if (boxUser.getUserId() == userId) {
+                            authority = 1;
+                            break;
+                        }
+                    }
+                    itemMap.put("authority", authority);
+                }
+            }
+            jsonResult.setData(mapList);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
 
     //授权开箱
     @RequestMapping(value = "/boxUser/add", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
@@ -250,13 +313,22 @@ public class AppApiController extends BaseAppController {
                 return jsonResult;
             }
 
-            //新增记录
+            //新增授权
             BoxUser boxUser = new BoxUser();
             boxUser.setBoxId(boxId);
             boxUser.setUserId(userId);
             boxUser.setType((byte) 1);
             boxUser.setCreateTime(DateUtil.getCurrentDateTime());
             boxUserService.saveBoxUser(boxUser);
+
+            //新增记录
+            BoxRecord boxRecord = new BoxRecord();
+            boxRecord.setBoxId(boxId);
+            boxRecord.setUserId(getCurrentUserId());
+            boxRecord.setType((byte) 2);
+            boxRecord.setCreateTime(DateUtil.getCurrentDateTime());
+            boxRecord.setRemark("授权给：" + userService.getUser(userId).getName());
+            boxRecordService.saveBoxRecord(boxRecord);
 
             jsonResult.setData(boxUser);
             jsonResult.setMessage("授权成功！");
@@ -284,8 +356,21 @@ public class AppApiController extends BaseAppController {
                 jsonResult.setMessage("您无权限！");
                 return jsonResult;
             }
-            //删除记录
-            boxUserService.delteBoxUser(userId);
+
+            //取消授权
+            List<BoxUser> boxUsers = boxUserService.searchBoxUser(boxId, null, userId);
+            for (BoxUser boxUser : boxUsers) {
+                boxUserService.delteBoxUser(boxUser.getId());
+            }
+
+            //新增记录
+            BoxRecord boxRecord = new BoxRecord();
+            boxRecord.setBoxId(boxId);
+            boxRecord.setUserId(getCurrentUserId());
+            boxRecord.setType((byte) 3);
+            boxRecord.setCreateTime(DateUtil.getCurrentDateTime());
+            boxRecord.setRemark("取消授权给：" + userService.getUser(userId).getName());
+            boxRecordService.saveBoxRecord(boxRecord);
 
 //            jsonResult.setData();
             jsonResult.setMessage("取消成功！");
@@ -297,66 +382,100 @@ public class AppApiController extends BaseAppController {
         return jsonResult;
     }
 
-//    //获取用户个人信息
-//    @RequestMapping(value = "xxx/xxx", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
-//    @ResponseBody
-//    public JsonResult xxxx(String xxxx) {
-//        JsonResult jsonResult = new JsonResult();
-//        try {
-////          todo：xxx
-//
-////            jsonResult.setData(xxx);
-////            jsonResult.setMessage("xxxx");
-//            jsonResult.setStateSuccess();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
-//        }
-//        return jsonResult;
-//    }
+    //获取用户个人信息
+    @RequestMapping(value = "/user/detail", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult userDetail() {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            Map resultMap = new LinkedHashMap();
 
-//    //用户动态
-//    @RequestMapping(value = "xxx/xxx", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
-//    @ResponseBody
-//    public JsonResult xxxx(String xxxx) {
-//        JsonResult jsonResult = new JsonResult();
-//        try {
-////          todo：xxx
-//
-////            jsonResult.setData(xxx);
-////            jsonResult.setMessage("xxxx");
-//            jsonResult.setStateSuccess();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
-//        }
-//        return jsonResult;
-//    }
+            //用户信息
+            User user = getCurrentUser();
+            resultMap.put("user", user);
 
-//    //查看开箱记录
-//    @RequestMapping(value = "/boxRecord/openRecord/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
-//    @ResponseBody
-//    public JsonResult xxxx(String xxxx) {
-//        JsonResult jsonResult = new JsonResult();
-//        try {
-////          todo：xxx
-//
-////            jsonResult.setData(xxx);
-////            jsonResult.setMessage("xxxx");
-//            jsonResult.setStateSuccess();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
-//        }
-//        return jsonResult;
-//    }
+            //是否创始人
+            //创建的群组
+            List<Group> groupList0 = groupService.searchGroupByUserIdAndMemberType(user.getId(), (byte) 0);
+            if (groupList0 != null && groupList0.size() > 0) {
+                resultMap.put("createFlag", "yes");
+                resultMap.put("createGroupList", groupList0);
+            } else {
+                resultMap.put("createFlag", "no");
+                resultMap.put("createGroupList", null);
+            }
+
+            //是否是成员
+            //所属的群组
+            List<Group> groupList1 = groupService.searchGroupByUserIdAndMemberType(user.getId(), (byte) 1);
+            if (groupList1 != null && groupList1.size() > 0) {
+                resultMap.put("memberFlag", "yes");
+                resultMap.put("memberGroupList", groupList1);
+            } else {
+                resultMap.put("memberFlag", "no");
+                resultMap.put("memberGroupList", null);
+            }
+
+            jsonResult.setData(resultMap);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+    //用户动态
+    @RequestMapping(value = "/boxRecord/userRecord/list", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult boxRecordUserRecordList() {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            List<Map> mapList = boxRecordService.searchUserRecord(getCurrentUserId());
+            //时间戳转换为时间
+            for (Map map : mapList) {
+                map.put("createTime", DateUtil.formatDateTime((Date) map.get("createTime"), DateUtil.FORMAT_DATETIME));
+            }
+            jsonResult.setData(mapList);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+    //查看开箱记录
+    @RequestMapping(value = "/boxRecord/openRecord/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult boxRecordOpenRecordList(Long boxId, String userName) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            //（todo权限）
+            List<Map> mapList = boxRecordService.searchOpenRecord(boxId, userName);
+            //时间戳转换为时间
+            for (Map map : mapList) {
+                map.put("createTime", DateUtil.formatDateTime((Date) map.get("createTime"), DateUtil.FORMAT_DATETIME));
+            }
+            jsonResult.setData(mapList);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
 
     //查看群成员
-    @RequestMapping(value = "/groupMember/{groupId}/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @RequestMapping(value = "/groupMember/{groupId}/list", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
     public JsonResult groupMemberList(@PathVariable("groupId") Long groupId) {
         JsonResult jsonResult = new JsonResult();
         try {
+            //（todo权限）
             List<Map> mapList = groupMemberService.searchGroupMemberByGroupId(groupId);
             jsonResult.setData(mapList);
             jsonResult.setMessage(Constant.SUCCESS_MESSAGE);

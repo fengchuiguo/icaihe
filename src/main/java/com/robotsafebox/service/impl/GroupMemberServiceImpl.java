@@ -21,7 +21,6 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         return groupMemberMapper.insertSelective(groupMember);
     }
 
-    @Override
     public List<Map> searchGroupMemberByGroupId(Long groupId) {
         return groupMemberMapper.selectGroupMemberByGroupId(groupId);
     }

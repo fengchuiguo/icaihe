@@ -139,8 +139,16 @@
     u.id id, u.phone phone, u.name name, u.sex sex, u.head head, u.type type, u.create_time create_time, u.update_time update_time
     from ich_user u
     LEFT JOIN ich_group_member gm ON gm.user_id=u.id
-    LEFT JOIN ich_box b ON b.group_id=gm.id
+    LEFT JOIN ich_box b ON b.group_id=gm.group_id
     where b.id=#{boxId,jdbcType=BIGINT}  AND gm.type=0
+    </select>
+
+    <select id="selectCreateUserByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    u.id id, u.phone phone, u.name name, u.sex sex, u.head head, u.type type, u.create_time create_time, u.update_time update_time
+    from ich_user u
+    LEFT JOIN ich_group_member gm ON gm.user_id=u.id
+    where gm.group_id=#{groupId,jdbcType=BIGINT}  AND gm.type=0
     </select>
 
 

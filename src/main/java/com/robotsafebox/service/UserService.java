@@ -12,4 +12,6 @@ public interface UserService {
 
     User getCreateUserByBoxId(Long boxId);
 
+    User getCreateUserByGroupId(Long groupId);
+
 }
