@@ -4,6 +4,7 @@ import com.robotsafebox.entity.Group;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface GroupMapper {
     int deleteByPrimaryKey(Long id);
@@ -22,7 +23,7 @@ public interface GroupMapper {
     //    new add
     Group selectByGroupName(@Param("groupName") String groupName);
 
-    List<Group> selectByLikeGroupName(@Param("groupName") String groupName);
+    List<Map> selectByLikeGroupName(@Param("groupName") String groupName);
 
     List<Group> selectByGroupByUserIdAndMemberType(@Param("userId") Long userId, @Param("type") Byte type);
 

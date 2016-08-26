@@ -136,9 +136,9 @@
     where group_name = #{groupName,jdbcType=VARCHAR}
   </select>
 
-  <select id="selectByLikeGroupName" resultMap="BaseResultMap" parameterType="java.lang.String">
+  <select id="selectByLikeGroupName" resultType="java.util.HashMap" parameterType="java.lang.String">
     select
-    <include refid="Base_Column_List"/>
+    id groupId,group_name groupName
     from ich_group
     where 1=1
     <if test="groupName != null">

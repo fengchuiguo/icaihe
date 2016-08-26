@@ -40,6 +40,8 @@ public class AppApiController extends BaseAppController {
         JsonResult jsonResult = new JsonResult();
         try {
 
+            //todo权限，只允许创建一个？加入了就不允许创建？需求未定，接口暂时不限制。
+
             Group checkGroup = groupService.getGroupByGroupName(group.getGroupName());
             if (checkGroup != null) {
                 jsonResult.setMessage("企业组织名称已存在！");
@@ -82,7 +84,7 @@ public class AppApiController extends BaseAppController {
     public JsonResult groupList(@RequestParam("groupName") String groupName) {
         JsonResult jsonResult = new JsonResult();
         try {
-            List<Group> groupList = groupService.searchGroup(groupName);
+            List<Map> groupList = groupService.searchGroup(groupName);
             jsonResult.setData(groupList);
             jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
             jsonResult.setStateSuccess();
@@ -115,7 +117,7 @@ public class AppApiController extends BaseAppController {
             user.setUpdateTime(DateUtil.getCurrentDateTime());
             userService.saveUser(user);
 
-            jsonResult.setData(groupMember);
+//            jsonResult.setData(groupMember);
             jsonResult.setMessage("加入财盒群成功！");
             jsonResult.setStateSuccess();
         } catch (Exception ex) {
@@ -160,20 +162,20 @@ public class AppApiController extends BaseAppController {
     }
 
     //查看财盒
-    @RequestMapping(value = "/box/{id}/detail", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
+    @RequestMapping(value = "/box/detail", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
-    public JsonResult boxDetail(@PathVariable("id") Long id) {
+    public JsonResult boxDetail(Long boxId) {
         JsonResult jsonResult = new JsonResult();
         try {
             //权限
             //判断是否有开箱的权限
-            List<BoxUser> boxUsers = boxUserService.searchBoxUser(id, (byte) 1, getCurrentUserId());
+            List<BoxUser> boxUsers = boxUserService.searchBoxUser(boxId, (byte) 1, getCurrentUserId());
             if (boxUsers == null || boxUsers.size() < 1) {
                 jsonResult.setMessage("您无开箱权限！");
                 return jsonResult;
             }
 
-            Box box = boxService.getBox(id);
+            Box box = boxService.getBox(boxId);
             jsonResult.setData(box);
             jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
             jsonResult.setStateSuccess();
@@ -185,9 +187,9 @@ public class AppApiController extends BaseAppController {
     }
 
     //开箱(type=1),外借(type=4),即借即还(type=5)
-    @RequestMapping(value = "/boxRecord/{type}/{boxId}/add", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @RequestMapping(value = "/boxRecord/add", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
-    public JsonResult boxRecordAdd(@PathVariable("type") int type, @PathVariable("boxId") Long boxId) {
+    public JsonResult boxRecordAdd(int type, Long boxId) {
         JsonResult jsonResult = new JsonResult();
         try {
             if (type != 1 && type != 4 && type != 5) {
@@ -214,7 +216,7 @@ public class AppApiController extends BaseAppController {
             boxRecord.setRemark(type == 1 ? "开了财盒" : (type == 4 ? "外借" : (type == 5 ? "即借即还" : "")));
             boxRecordService.saveBoxRecord(boxRecord);
 
-            jsonResult.setData(boxRecord);
+//            jsonResult.setData(boxRecord);
             jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
             jsonResult.setStateSuccess();
         } catch (Exception ex) {
@@ -227,11 +229,11 @@ public class AppApiController extends BaseAppController {
     //开箱握手协议
     @RequestMapping(value = "/agreement/openBox/detail", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
-    public JsonResult agreementOpenBoxDetail(Long id, String key) {
+    public JsonResult agreementOpenBoxDetail(Long boxId, String key) {
         JsonResult jsonResult = new JsonResult();
         try {
             //判断是否有开箱的权限
-            List<BoxUser> boxUsers = boxUserService.searchBoxUser(id, (byte) 1, getCurrentUserId());
+            List<BoxUser> boxUsers = boxUserService.searchBoxUser(boxId, (byte) 1, getCurrentUserId());
             if (boxUsers == null || boxUsers.size() < 1) {
                 jsonResult.setMessage("您无开箱权限！");
                 return jsonResult;
@@ -249,9 +251,9 @@ public class AppApiController extends BaseAppController {
 
 
     //授权管理列表
-    @RequestMapping(value = "/groupMember/{groupId}/{boxId}/list", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
+    @RequestMapping(value = "/groupMember/authority/list", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
-    public JsonResult groupMemberGroupIdBoxIdList(@PathVariable("groupId") Long groupId, @PathVariable("boxId") Long boxId) {
+    public JsonResult groupMemberGroupIdBoxIdList(Long groupId, Long boxId) {
         JsonResult jsonResult = new JsonResult();
         try {
             //判断该箱子是否存在，是否属于该群组
@@ -330,7 +332,7 @@ public class AppApiController extends BaseAppController {
             boxRecord.setRemark("授权给：" + userService.getUser(userId).getName());
             boxRecordService.saveBoxRecord(boxRecord);
 
-            jsonResult.setData(boxUser);
+//            jsonResult.setData(boxUser);
             jsonResult.setMessage("授权成功！");
             jsonResult.setStateSuccess();
         } catch (Exception ex) {
@@ -392,29 +394,51 @@ public class AppApiController extends BaseAppController {
 
             //用户信息
             User user = getCurrentUser();
-            resultMap.put("user", user);
+//            resultMap.put("user", user);
 
+//            //是否创始人
+//            //创建的群组
+//            List<Group> groupList0 = groupService.searchGroupByUserIdAndMemberType(user.getId(), (byte) 0);
+//            if (groupList0 != null && groupList0.size() > 0) {
+//                resultMap.put("createFlag", "yes");
+//                resultMap.put("createGroupList", groupList0);
+//            } else {
+//                resultMap.put("createFlag", "no");
+//                resultMap.put("createGroupList", null);
+//            }
+//
+//            //是否是成员
+//            //所属的群组
+//            List<Group> groupList1 = groupService.searchGroupByUserIdAndMemberType(user.getId(), (byte) 1);
+//            if (groupList1 != null && groupList1.size() > 0) {
+//                resultMap.put("memberFlag", "yes");
+//                resultMap.put("memberGroupList", groupList1);
+//            } else {
+//                resultMap.put("memberFlag", "no");
+//                resultMap.put("memberGroupList", null);
+//            }
+
+            //用户信息
+            resultMap.put("name", user.getName());
+            resultMap.put("phone", user.getPhone());
+
+            Boolean isNewUser = true;
             //是否创始人
             //创建的群组
             List<Group> groupList0 = groupService.searchGroupByUserIdAndMemberType(user.getId(), (byte) 0);
             if (groupList0 != null && groupList0.size() > 0) {
-                resultMap.put("createFlag", "yes");
-                resultMap.put("createGroupList", groupList0);
+                isNewUser = false;
             } else {
-                resultMap.put("createFlag", "no");
-                resultMap.put("createGroupList", null);
+                //是否是成员
+                //所属的群组
+                List<Group> groupList1 = groupService.searchGroupByUserIdAndMemberType(user.getId(), (byte) 1);
+                if (groupList1 != null && groupList1.size() > 0) {
+                    isNewUser = false;
+                }
             }
 
-            //是否是成员
-            //所属的群组
-            List<Group> groupList1 = groupService.searchGroupByUserIdAndMemberType(user.getId(), (byte) 1);
-            if (groupList1 != null && groupList1.size() > 0) {
-                resultMap.put("memberFlag", "yes");
-                resultMap.put("memberGroupList", groupList1);
-            } else {
-                resultMap.put("memberFlag", "no");
-                resultMap.put("memberGroupList", null);
-            }
+            //isNewUser用户标识
+            resultMap.put("isNewUser", isNewUser);
 
             jsonResult.setData(resultMap);
             jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
@@ -470,14 +494,40 @@ public class AppApiController extends BaseAppController {
     }
 
     //查看群成员
-    @RequestMapping(value = "/groupMember/{groupId}/list", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
+    @RequestMapping(value = "/groupMember/group/list", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
-    public JsonResult groupMemberList(@PathVariable("groupId") Long groupId) {
+    public JsonResult groupMemberList() {
         JsonResult jsonResult = new JsonResult();
         try {
             //（todo权限）
+            Long groupId = null;
+            //创建的群组
+            List<Group> groupList0 = groupService.searchGroupByUserIdAndMemberType(getCurrentUserId(), (byte) 0);
+            if (groupList0 != null && groupList0.size() > 0) {
+                groupId = groupList0.get(0).getId();
+            } else {
+                //是否是成员
+                //所属的群组
+                List<Group> groupList1 = groupService.searchGroupByUserIdAndMemberType(getCurrentUserId(), (byte) 1);
+                if (groupList1 != null && groupList1.size() > 0) {
+                    groupId = groupList1.get(0).getId();
+                }
+            }
+            if (groupId == null) {
+                jsonResult.setMessage("您尚未创建或加入财盒群！");
+                return jsonResult;
+            }
+
+            Group group = groupService.getGroup(groupId);
+
+            Map result = new LinkedHashMap();
+            result.put("groupId", group.getId());
+            result.put("groupName", group.getGroupName());
+            result.put("createTime", DateUtil.formatDateTime(group.getCreateTime(), DateUtil.FORMAT_DATETIME));
             List<Map> mapList = groupMemberService.searchGroupMemberByGroupId(groupId);
-            jsonResult.setData(mapList);
+            result.put("memberList", mapList);
+
+            jsonResult.setData(result);
             jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
             jsonResult.setStateSuccess();
         } catch (Exception ex) {
@@ -501,7 +551,7 @@ public class AppApiController extends BaseAppController {
             suggestion.setCreateTime(DateUtil.getCurrentDateTime());
             suggestionService.saveSuggestion(suggestion);
 
-            jsonResult.setData(suggestion);
+//            jsonResult.setData(suggestion);
             jsonResult.setMessage("反馈成功！");
             jsonResult.setStateSuccess();
         } catch (Exception ex) {

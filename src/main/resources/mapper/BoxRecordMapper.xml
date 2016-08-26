@@ -129,7 +129,7 @@
   <!--new add-->
   <select id="selectOpenRecord" resultType="java.util.HashMap">
     select
-    br.id id,u.name userName,u.head userHead, br.create_time createTime,br.remark remark
+    u.name userName,u.head userHead, br.create_time createTime,br.remark remark
     from ich_box_record br
     LEFT JOIN ich_user u ON br.user_id=u.id
     where br.box_id=#{boxId,jdbcType=BIGINT}  AND br.type=1
@@ -141,10 +141,10 @@
 
   <select id="selectUserRecord" resultType="java.util.HashMap">
     select
-    br.id id,u.name userName,u.head userHead, br.create_time createTime,br.remark remark
+    u.name userName,u.head userHead, br.create_time createTime,br.type type,br.remark remark
     from ich_box_record br
     LEFT JOIN ich_user u ON br.user_id=u.id
-    where br.user_id=#{userId,jdbcType=BIGINT}  AND (br.type=1 or br.type=2 or br.type=3)
+    where br.user_id=#{userId,jdbcType=BIGINT}
     ORDER BY br.create_time DESC
   </select>
 

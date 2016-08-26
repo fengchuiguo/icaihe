@@ -67,17 +67,17 @@ public class AppLogInController extends BaseAppController {
         JsonResult jsonResult = new JsonResult();
         try {
 
-//            //todo start-测试时候，注释掉，发布前需要注释回来
-//            Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
-//            if (smscode == null) {
-//                jsonResult.setMessage("请重新获取验证码！");
-//                return jsonResult;
-//            }
-//            if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
-//                jsonResult.setMessage("验证码错误！");
-//                return jsonResult;
-//            }
-//            //todo end--测试时候，注释掉，发布前需要注释回来
+            //todo start-测试时候，注释掉，发布前需要注释回来
+            Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
+            if (smscode == null) {
+                jsonResult.setMessage("请重新获取验证码！");
+                return jsonResult;
+            }
+            if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
+                jsonResult.setMessage("验证码错误！");
+                return jsonResult;
+            }
+            //todo end--测试时候，注释掉，发布前需要注释回来
 
             String userFlag = "old";
             //用户不存在的话，注册新用户
@@ -98,32 +98,27 @@ public class AppLogInController extends BaseAppController {
             Map resultMap = new LinkedHashMap();
             //token
             resultMap.put("token", token);
-            //userFlag用户标识:  old老用户  new新用户
-            resultMap.put("userFlag", userFlag);
             //用户信息
-            resultMap.put("user", newUser);
+            resultMap.put("name", newUser.getName());
+            resultMap.put("phone", newUser.getPhone());
 
+            Boolean isNewUser = true;
             //是否创始人
             //创建的群组
             List<Group> groupList0 = groupService.searchGroupByUserIdAndMemberType(newUser.getId(), (byte) 0);
             if (groupList0 != null && groupList0.size() > 0) {
-                resultMap.put("createFlag", "yes");
-                resultMap.put("createGroupList", groupList0);
+                isNewUser = false;
             } else {
-                resultMap.put("createFlag", "no");
-                resultMap.put("createGroupList", null);
+                //是否是成员
+                //所属的群组
+                List<Group> groupList1 = groupService.searchGroupByUserIdAndMemberType(newUser.getId(), (byte) 1);
+                if (groupList1 != null && groupList1.size() > 0) {
+                    isNewUser = false;
+                }
             }
 
-            //是否是成员
-            //所属的群组
-            List<Group> groupList1 = groupService.searchGroupByUserIdAndMemberType(newUser.getId(), (byte) 1);
-            if (groupList1 != null && groupList1.size() > 0) {
-                resultMap.put("memberFlag", "yes");
-                resultMap.put("memberGroupList", groupList1);
-            } else {
-                resultMap.put("memberFlag", "no");
-                resultMap.put("memberGroupList", null);
-            }
+            //isNewUser用户标识
+            resultMap.put("isNewUser", isNewUser);
 
             jsonResult.setData(resultMap);
             jsonResult.setMessage(userFlag.equals("old") ? "登录成功！" : "注册成功！");

@@ -7,12 +7,17 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GroupServiceImpl implements GroupService {
 
     @Resource
     private GroupMapper groupMapper;
+
+    public Group getGroup(Long id) {
+        return groupMapper.selectByPrimaryKey(id);
+    }
 
     public int saveGroup(Group group) {
         if (group.getId() != null) {
@@ -28,7 +33,7 @@ public class GroupServiceImpl implements GroupService {
         return groupMapper.selectByGroupName(groupName);
     }
 
-    public List<Group> searchGroup(String groupName) {
+    public List<Map> searchGroup(String groupName) {
         return groupMapper.selectByLikeGroupName(groupName);
     }
 
