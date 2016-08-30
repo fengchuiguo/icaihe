@@ -422,23 +422,41 @@ public class AppApiController extends BaseAppController {
             resultMap.put("name", user.getName());
             resultMap.put("phone", user.getPhone());
 
+            Long groupId = null;
+            String companyName = null;
+            Long boxId = null;
+
             Boolean isNewUser = true;
             //是否创始人
             //创建的群组
             List<Group> groupList0 = groupService.searchGroupByUserIdAndMemberType(user.getId(), (byte) 0);
             if (groupList0 != null && groupList0.size() > 0) {
                 isNewUser = false;
+                groupId = groupList0.get(0).getId();
+                companyName = groupList0.get(0).getGroupName();
             } else {
                 //是否是成员
                 //所属的群组
                 List<Group> groupList1 = groupService.searchGroupByUserIdAndMemberType(user.getId(), (byte) 1);
                 if (groupList1 != null && groupList1.size() > 0) {
                     isNewUser = false;
+                    groupId = groupList1.get(0).getId();
+                    companyName = groupList1.get(0).getGroupName();
                 }
+            }
+
+            //判断是否有开箱的权限
+            List<BoxUser> boxUsers = boxUserService.searchBoxUser(boxId, (byte) 1, user.getId());
+            if (boxUsers != null && boxUsers.size() > 0) {
+                boxId = boxUsers.get(0).getBoxId();
             }
 
             //isNewUser用户标识
             resultMap.put("isNewUser", isNewUser);
+
+            resultMap.put("groupId", groupId);
+            resultMap.put("companyName", companyName);
+            resultMap.put("boxId", boxId);
 
             jsonResult.setData(resultMap);
             jsonResult.setMessage(Constant.SUCCESS_MESSAGE);

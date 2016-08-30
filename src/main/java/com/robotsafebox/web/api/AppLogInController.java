@@ -2,6 +2,7 @@ package com.robotsafebox.web.api;
 
 import com.robotsafebox.base.json.JsonResult;
 import com.robotsafebox.base.web.BaseAppController;
+import com.robotsafebox.entity.BoxUser;
 import com.robotsafebox.entity.Group;
 import com.robotsafebox.entity.User;
 import com.robotsafebox.framework.properties.Constant;
@@ -9,6 +10,7 @@ import com.robotsafebox.framework.sms.SmsSendUtils;
 import com.robotsafebox.framework.tools.ApiTokenTool;
 import com.robotsafebox.framework.tools.CodeCheckTool;
 import com.robotsafebox.framework.utils.RandomUtil;
+import com.robotsafebox.service.BoxUserService;
 import com.robotsafebox.service.GroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,9 @@ public class AppLogInController extends BaseAppController {
 
     @Autowired
     protected GroupService groupService;
+
+    @Autowired
+    protected BoxUserService boxUserService;
 
     /**
      * 此接口暂时无用
@@ -67,17 +72,17 @@ public class AppLogInController extends BaseAppController {
         JsonResult jsonResult = new JsonResult();
         try {
 
-            //todo start-测试时候，注释掉，发布前需要注释回来
-            Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
-            if (smscode == null) {
-                jsonResult.setMessage("请重新获取验证码！");
-                return jsonResult;
-            }
-            if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
-                jsonResult.setMessage("验证码错误！");
-                return jsonResult;
-            }
-            //todo end--测试时候，注释掉，发布前需要注释回来
+//            //todo start-测试时候，注释掉，发布前需要注释回来
+//            Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
+//            if (smscode == null) {
+//                jsonResult.setMessage("请重新获取验证码！");
+//                return jsonResult;
+//            }
+//            if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
+//                jsonResult.setMessage("验证码错误！");
+//                return jsonResult;
+//            }
+//            //todo end--测试时候，注释掉，发布前需要注释回来
 
             String userFlag = "old";
             //用户不存在的话，注册新用户
@@ -102,23 +107,41 @@ public class AppLogInController extends BaseAppController {
             resultMap.put("name", newUser.getName());
             resultMap.put("phone", newUser.getPhone());
 
+            Long groupId = null;
+            String companyName = null;
+            Long boxId = null;
+
             Boolean isNewUser = true;
             //是否创始人
             //创建的群组
             List<Group> groupList0 = groupService.searchGroupByUserIdAndMemberType(newUser.getId(), (byte) 0);
             if (groupList0 != null && groupList0.size() > 0) {
                 isNewUser = false;
+                groupId = groupList0.get(0).getId();
+                companyName = groupList0.get(0).getGroupName();
             } else {
                 //是否是成员
                 //所属的群组
                 List<Group> groupList1 = groupService.searchGroupByUserIdAndMemberType(newUser.getId(), (byte) 1);
                 if (groupList1 != null && groupList1.size() > 0) {
                     isNewUser = false;
+                    groupId = groupList1.get(0).getId();
+                    companyName = groupList1.get(0).getGroupName();
                 }
+            }
+
+            //判断是否有开箱的权限
+            List<BoxUser> boxUsers = boxUserService.searchBoxUser(boxId, (byte) 1, newUser.getId());
+            if (boxUsers != null && boxUsers.size() > 0) {
+                boxId = boxUsers.get(0).getBoxId();
             }
 
             //isNewUser用户标识
             resultMap.put("isNewUser", isNewUser);
+
+            resultMap.put("groupId", groupId);
+            resultMap.put("companyName", companyName);
+            resultMap.put("boxId", boxId);
 
             jsonResult.setData(resultMap);
             jsonResult.setMessage(userFlag.equals("old") ? "登录成功！" : "注册成功！");

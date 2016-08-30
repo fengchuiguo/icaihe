@@ -105,18 +105,29 @@ public class ApiTokenTool {
     private static String desrypt(String encryptStr) {
         byte[] result = null;
         try {
-//            result = cipher_DECRYPT.doFinal(Base64.decodeBase64(URLDecoder.decode(encryptStr, Constant.UTF_8)));
 
-//          说明：SpringMvc获取参数时候，自己执行过了URLDecoder.decode，所以此处 我们去掉转换。
-            result = cipher_DECRYPT.doFinal(Base64.decodeBase64(encryptStr));
+
+            System.out.println("ApiTokenTool--TEST--encryptStr: " + encryptStr);
+            try {
+                System.out.println("ApiTokenTool--TEST--URLDecoder.decode: " + URLDecoder.decode(encryptStr, Constant.UTF_8));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            System.out.println("ApiTokenTool--TEST--Base64.decodeBase64: " + Base64.decodeBase64(encryptStr));
+
+//            result = cipher_DECRYPT.doFinal(Base64.decodeBase64(encryptStr));
+
+//          说明：SpringMvc获取参数时候，对于URL拼接的参数，获取后好像自己执行过了URLDecoder.decode，MAC上postman会附加参数到url，所以会自动转换
+//          但是对于普通post和get请求，token被当做传递的参数的时候，不会处理，需要自己转换一下。
+            result = cipher_DECRYPT.doFinal(Base64.decodeBase64(URLDecoder.decode(encryptStr, Constant.UTF_8)));
+
         } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
         } catch (BadPaddingException e) {
             e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-//        catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
         System.out.println("ApiTokenTool desrypt : " + (result == null ? null : new String(result)));
         return result == null ? null : new String(result);
     }

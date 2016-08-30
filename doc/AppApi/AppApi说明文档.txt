@@ -51,7 +51,10 @@ code
     "token": "A6kK5pVdU42UMZF65uInSrflS6r1sTRO7pKDaiaiXSs%3D",
     "name": "lhy",
     "phone": "15266668767",
-    "isNewUser": false
+    "isNewUser": false,
+    "groupId": 11,
+    "companyName": "xxx",
+    "boxId": 12
   }
 }
 或者：
@@ -134,9 +137,6 @@ joinDate
 /api/v1/box/add
 [POST]
 ichId
-ibeaconId
-wifiId
-wifiPassword
 boxName
 groupId
 
@@ -147,9 +147,9 @@ groupId
   "data": {
     "id": 3,
     "ichId": "ICH0000001212",
-    "ibeaconId": "ibbbhhh00022112",
-    "wifiId": "w3122231",
-    "wifiPassword": "p23231242",
+    "ibeaconId": null,
+    "wifiId": null,
+    "wifiPassword": null,
     "boxName": "ceshiCH12hei",
     "groupId": 12,
     "createTime": "2016-08-26 11:01:36",
@@ -307,7 +307,10 @@ userId
   "data": {
     "name": "lhy",
     "phone": "15277665533",
-    "isNewUser": false
+    "isNewUser": false,
+    "groupId": 11,
+    "companyName": "xxx",
+    "boxId": 12
   }
 }
 
