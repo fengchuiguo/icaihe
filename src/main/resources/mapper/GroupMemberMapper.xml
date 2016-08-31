@@ -118,7 +118,7 @@
   <!--new add-->
   <select id="selectGroupMemberByGroupId" resultType="java.util.HashMap" parameterType="java.lang.Long">
     select
-    u.id userId,u.name userName,u.head userHead,gm.type type, gm.join_date joinDate
+    u.id userId,u.name userName,u.head userHead,u.phone userPhone, gm.join_date joinDate
     from ich_group_member gm
     LEFT JOIN ich_user u ON gm.user_id=u.id
     where gm.group_id=#{groupId,jdbcType=BIGINT}

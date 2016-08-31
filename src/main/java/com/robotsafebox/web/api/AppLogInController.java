@@ -104,6 +104,7 @@ public class AppLogInController extends BaseAppController {
             //token
             resultMap.put("token", token);
             //用户信息
+            resultMap.put("userId", newUser.getId());
             resultMap.put("name", newUser.getName());
             resultMap.put("phone", newUser.getPhone());
 

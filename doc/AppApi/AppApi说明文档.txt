@@ -49,6 +49,7 @@ code
   "message": "登录成功！",
   "data": {
     "token": "A6kK5pVdU42UMZF65uInSrflS6r1sTRO7pKDaiaiXSs%3D",
+    "userId": 1,
     "name": "lhy",
     "phone": "15266668767",
     "isNewUser": false,
@@ -240,7 +241,7 @@ boxId
 
 
 
----授权管理列表
+---授权管理列表 （通讯录暂时也用这个）
 /api/v1/groupMember/authority/list
 [GET]
 groupId
@@ -254,16 +255,20 @@ authority  (‘0’表示未授权开箱，‘1’表示已经授权开箱)
   "message": "Success",
   "data": [
     {
+      "joinDate": null,
       "authority": 1,
       "userId": 1,
       "userName": "lhy",
+      "userPhone": "15211111111",
       "userHead": "1myg.jpg"
     },
     {
       "joinDate": "2016-08-21",
       "authority": 0,
       "userId": 4,
-      "userName": "xiaobai"
+      "userName": "xiaobai",
+      "userPhone": "15500000000",
+      "userHead": null
     }
   ]
 }
@@ -305,6 +310,7 @@ userId
   "state": 1,
   "message": "Success",
   "data": {
+    "userId": 1,
     "name": "lhy",
     "phone": "15277665533",
     "isNewUser": false,

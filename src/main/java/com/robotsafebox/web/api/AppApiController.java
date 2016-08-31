@@ -250,7 +250,7 @@ public class AppApiController extends BaseAppController {
     }
 
 
-    //授权管理列表
+    //授权管理列表 （通讯录暂时也用这个）
     @RequestMapping(value = "/groupMember/authority/list", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
     public JsonResult groupMemberGroupIdBoxIdList(Long groupId, Long boxId) {
@@ -262,12 +262,13 @@ public class AppApiController extends BaseAppController {
                 jsonResult.setMessage("您无该保险箱");
                 return jsonResult;
             }
-            //权限(群组创建人才可以添加财盒)
-            User checkUser = userService.getCreateUserByGroupId(groupId);
-            if (!checkUser.getId().equals(getCurrentUserId())) {
-                jsonResult.setMessage("无操作权限！");
-                return jsonResult;
-            }
+
+//            //权限(群组创建人才可以进入授权管理)（通讯录暂时也用到这里，暂时去掉此处权限）
+//            User checkUser = userService.getCreateUserByGroupId(groupId);
+//            if (!checkUser.getId().equals(getCurrentUserId())) {
+//                jsonResult.setMessage("无操作权限！");
+//                return jsonResult;
+//            }
 
             //判断是否已经授权
             List<Map> mapList = groupMemberService.searchGroupMemberByGroupId(groupId);
@@ -419,6 +420,7 @@ public class AppApiController extends BaseAppController {
 //            }
 
             //用户信息
+            resultMap.put("userId", user.getId());
             resultMap.put("name", user.getName());
             resultMap.put("phone", user.getPhone());
 
