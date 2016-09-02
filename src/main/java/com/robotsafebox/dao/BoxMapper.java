@@ -14,4 +14,8 @@ public interface BoxMapper {
     int updateByPrimaryKeySelective(Box record);
 
     int updateByPrimaryKey(Box record);
+
+    //new add
+    Box selectByIchId(String ichid);
+
 }

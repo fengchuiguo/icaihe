@@ -140,6 +140,16 @@ public class AppApiController extends BaseAppController {
                 return jsonResult;
             }
 
+            if (StringUtils.isBlank(box.getIchId())) {
+                jsonResult.setMessage("请输入ICHID！");
+                return jsonResult;
+            }
+            Box checkBox = boxService.getBoxByIchId(box.getIchId());
+            if (checkBox != null) {
+                jsonResult.setMessage("ICHID已存在！");
+                return jsonResult;
+            }
+
             box.setCreateTime(DateUtil.getCurrentDateTime());
             boxService.saveBox(box);
 

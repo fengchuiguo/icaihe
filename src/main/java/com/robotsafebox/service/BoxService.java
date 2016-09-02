@@ -9,4 +9,6 @@ public interface BoxService {
 
     Box getBox(Long id);
 
+    Box getBoxByIchId(String ichid);
+
 }

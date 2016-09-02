@@ -24,5 +24,9 @@ public class BoxServiceImpl implements BoxService {
         return boxMapper.selectByPrimaryKey(id);
     }
 
+    public Box getBoxByIchId(String ichid) {
+        return boxMapper.selectByIchId(ichid);
+    }
+
 
 }

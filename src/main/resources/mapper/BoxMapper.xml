@@ -139,4 +139,14 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <!-- new add-->
+  <select id="selectByIchId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from ich_box
+    where ich_id = #{ichid,jdbcType=VARCHAR}
+  </select>
+
 </mapper>
