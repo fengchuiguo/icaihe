@@ -4,6 +4,7 @@ import com.robotsafebox.base.json.JsonResult;
 import com.robotsafebox.base.web.BaseAppController;
 import com.robotsafebox.entity.*;
 import com.robotsafebox.framework.properties.Constant;
+import com.robotsafebox.framework.push.jpush.JPushUtils;
 import com.robotsafebox.framework.tools.AgreementTool;
 import com.robotsafebox.framework.utils.DateUtil;
 import com.robotsafebox.service.*;
@@ -30,6 +31,8 @@ public class AppApiController extends BaseAppController {
     protected BoxRecordService boxRecordService;
     @Autowired
     protected SuggestionService suggestionService;
+    @Autowired
+    private BoxMessageService boxMessageService;
 
     //创建财盒群
     @RequestMapping(value = "/group/add", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
@@ -161,9 +164,30 @@ public class AppApiController extends BaseAppController {
             boxUser.setCreateTime(DateUtil.getCurrentDateTime());
             boxUserService.saveBoxUser(boxUser);
 
-            jsonResult.setData(box);
+            Map resultMap = new HashMap();
+            resultMap.put("boxId", box.getId());
+            jsonResult.setData(resultMap);
             jsonResult.setMessage("创建成功！");
             jsonResult.setStateSuccess();
+
+            //推送消息（说明：actiontype == 1 WIFI配置成功 硬件上传出不推送，改到  此处  添加财盒成功后推送）
+            if (box != null) {
+                int actiontype = 1;
+                String alertContent = "您的财盒“" + box.getBoxName() + "”创建成功";
+                if (alertContent != null) {
+                    Boolean pushOK = JPushUtils.sendPush(getCurrentUserId(), alertContent, actiontype);
+                    if (pushOK) {
+                        BoxMessage boxMessage = new BoxMessage();
+                        boxMessage.setBoxId(box.getId());
+                        boxMessage.setUserId(getCurrentUserId());
+                        boxMessage.setType((byte) actiontype);
+                        boxMessage.setMessage(alertContent);
+                        boxMessage.setCreateTime(DateUtil.getCurrentDateTime());
+                        boxMessageService.saveBoxMessage(boxMessage);
+                    }
+                }
+            }
+
         } catch (Exception ex) {
             ex.printStackTrace();
             jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);

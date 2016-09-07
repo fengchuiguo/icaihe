@@ -56,22 +56,24 @@ public class reportController {
                 jsonResult.setMessage("保存成功！");
                 jsonResult.setStateSuccess();
 
-                //推送消息
-                Box box = boxService.getBoxByIchId(ichid);
-                if (box != null) {
-                    User user = userService.getCreateUserByBoxId(box.getId());
-                    if (user != null) {
-                        String alertContent = JPushUtils.getAlertContent(box.getBoxName(), actiontype);
-                        if (alertContent != null) {
-                            Boolean pushOK = JPushUtils.sendPush(user.getId(), alertContent, actiontype);
-                            if (pushOK) {
-                                BoxMessage boxMessage = new BoxMessage();
-                                boxMessage.setBoxId(box.getId());
-                                boxMessage.setUserId(user.getId());
-                                boxMessage.setType((byte) actiontype);
-                                boxMessage.setMessage(alertContent);
-                                boxMessage.setCreateTime(DateUtil.getCurrentDateTime());
-                                boxMessageService.saveBoxMessage(boxMessage);
+                //推送消息（说明：actiontype == 1 WIFI配置成功 此处不推送，改到 添加财盒 成功后推送）
+                if (actiontype == 2 || actiontype == 3 || actiontype == 4 || actiontype == 5) {
+                    Box box = boxService.getBoxByIchId(ichid);
+                    if (box != null) {
+                        User user = userService.getCreateUserByBoxId(box.getId());
+                        if (user != null) {
+                            String alertContent = JPushUtils.getAlertContent(box.getBoxName(), actiontype);
+                            if (alertContent != null) {
+                                Boolean pushOK = JPushUtils.sendPush(user.getId(), alertContent, actiontype);
+                                if (pushOK) {
+                                    BoxMessage boxMessage = new BoxMessage();
+                                    boxMessage.setBoxId(box.getId());
+                                    boxMessage.setUserId(user.getId());
+                                    boxMessage.setType((byte) actiontype);
+                                    boxMessage.setMessage(alertContent);
+                                    boxMessage.setCreateTime(DateUtil.getCurrentDateTime());
+                                    boxMessageService.saveBoxMessage(boxMessage);
+                                }
                             }
                         }
                     }

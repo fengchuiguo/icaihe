@@ -146,15 +146,7 @@ groupId
   "state": 1,
   "message": "创建成功！",
   "data": {
-    "id": 3,
-    "ichId": "ICH0000001212",
-    "ibeaconId": null,
-    "wifiId": null,
-    "wifiPassword": null,
-    "boxName": "ceshiCH12hei",
-    "groupId": 12,
-    "createTime": "2016-08-26 11:01:36",
-    "updateTime": null
+    "boxId": 3
   }
 }
 
