@@ -381,12 +381,14 @@ userName
   "data": [
     {
       "createTime": "2016-08-26 11:11:07",
+      "type": 1,
       "remark": "开了财盒",
       "userName": "lhy",
       "userHead": "1myg.jpg"
     },
     {
       "createTime": "2016-08-26 11:06:03",
+      "type": 1,
       "remark": "开了财盒",
       "userName": "lhy",
       "userHead": "1myg.jpg"
