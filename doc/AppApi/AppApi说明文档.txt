@@ -1,4 +1,4 @@
-2016-08-26：
+2016-09-21：
 
 1.0版本功能：注册，登录，初始化WiFi设置保险箱，绑定保险箱，蓝牙开箱，报警记录，开箱记录 。
 主要先做这些功能，概括为三大模块：用户模块+保险箱模块+通知记录模块
@@ -233,7 +233,7 @@ boxId
 
 
 
----授权管理列表 （通讯录暂时也用这个）
+---授权管理列表
 /api/v1/groupMember/authority/list
 [GET]
 groupId
@@ -264,6 +264,35 @@ authority  (‘0’表示未授权开箱，‘1’表示已经授权开箱)
     }
   ]
 }
+
+
+
+---通讯录
+/api/v1/groupMember/list
+[GET]
+groupId
+
+{
+  "state": 1,
+  "message": "Success",
+  "data": [
+    {
+      "joinDate": null,
+      "userId": 1,
+      "userName": "lhy",
+      "userPhone": "15200000000",
+      "userHead": "1myg.jpg"
+    },
+    {
+      "joinDate": "2016-08-21",
+      "userId": 4,
+      "userName": "xiaobai",
+      "userPhone": "15500000000",
+      "userHead": null
+    }
+  ]
+}
+
 
 
 ---授权开箱
@@ -315,55 +344,62 @@ userId
 ---用户动态
 /api/v1/boxRecord/userRecord/list
 [GET]
+pageNo
 
 返回:
 {
   "state": 1,
   "message": "Success",
-  "data": [
-    {
-      "createTime": "2016-08-26 11:21:47",
-      "remark": "取消授权给：xiaobai",
-      "userName": "lhy",
-      "type": 3,
-      "userHead": "1myg.jpg"
-    },
-    {
-      "createTime": "2016-08-26 11:21:20",
-      "remark": "授权给：xiaobai",
-      "userName": "lhy",
-      "type": 2,
-      "userHead": "1myg.jpg"
-    },
-    {
-      "createTime": "2016-08-26 11:11:07",
-      "remark": "开了财盒",
-      "userName": "lhy",
-      "type": 1,
-      "userHead": "1myg.jpg"
-    },
-    {
-      "createTime": "2016-08-26 11:06:31",
-      "remark": "即借即还",
-      "userName": "lhy",
-      "type": 5,
-      "userHead": "1myg.jpg"
-    },
-    {
-      "createTime": "2016-08-26 11:06:27",
-      "remark": "外借",
-      "userName": "lhy",
-      "type": 4,
-      "userHead": "1myg.jpg"
-    },
-    {
-      "createTime": "2016-08-26 11:06:03",
-      "remark": "开了财盒",
-      "userName": "lhy",
-      "type": 1,
-      "userHead": "1myg.jpg"
-    }
-  ]
+  "data": {
+    "pageNo": 1,
+    "pageSize": 20,
+    "totalRecord": 6,
+    "totalPage": 1,
+    "results": [
+      {
+        "createTime": "2016-08-26 11:21:47",
+        "remark": "取消授权给：xiaobai",
+        "userName": "lhy",
+        "type": 3,
+        "userHead": "1myg.jpg"
+      },
+      {
+        "createTime": "2016-08-26 11:21:20",
+        "remark": "授权给：xiaobai",
+        "userName": "lhy",
+        "type": 2,
+        "userHead": "1myg.jpg"
+      },
+      {
+        "createTime": "2016-08-26 11:11:07",
+        "remark": "开了财盒",
+        "userName": "lhy",
+        "type": 1,
+        "userHead": "1myg.jpg"
+      },
+      {
+        "createTime": "2016-08-26 11:06:31",
+        "remark": "即借即还",
+        "userName": "lhy",
+        "type": 5,
+        "userHead": "1myg.jpg"
+      },
+      {
+        "createTime": "2016-08-26 11:06:27",
+        "remark": "外借",
+        "userName": "lhy",
+        "type": 4,
+        "userHead": "1myg.jpg"
+      },
+      {
+        "createTime": "2016-08-26 11:06:03",
+        "remark": "开了财盒",
+        "userName": "lhy",
+        "type": 1,
+        "userHead": "1myg.jpg"
+      }
+    ]
+  }
 }
 
 
@@ -372,28 +408,48 @@ userId
 [POST]
 boxId
 userName
-
+pageNo
 
 返回:
 {
   "state": 1,
   "message": "Success",
-  "data": [
-    {
-      "createTime": "2016-08-26 11:11:07",
-      "type": 1,
-      "remark": "开了财盒",
-      "userName": "lhy",
-      "userHead": "1myg.jpg"
-    },
-    {
-      "createTime": "2016-08-26 11:06:03",
-      "type": 1,
-      "remark": "开了财盒",
-      "userName": "lhy",
-      "userHead": "1myg.jpg"
-    }
-  ]
+  "data": {
+    "pageNo": 1,
+    "pageSize": 20,
+    "totalRecord": 4,
+    "totalPage": 1,
+    "results": [
+      {
+        "createTime": "2016-08-26 11:11:07",
+        "remark": "开了财盒",
+        "userName": "lhy",
+        "type": 1,
+        "userHead": "1myg.jpg"
+      },
+      {
+        "createTime": "2016-08-26 11:06:31",
+        "remark": "即借即还",
+        "userName": "lhy",
+        "type": 5,
+        "userHead": "1myg.jpg"
+      },
+      {
+        "createTime": "2016-08-26 11:06:27",
+        "remark": "外借",
+        "userName": "lhy",
+        "type": 4,
+        "userHead": "1myg.jpg"
+      },
+      {
+        "createTime": "2016-08-26 11:06:03",
+        "remark": "开了财盒",
+        "userName": "lhy",
+        "type": 1,
+        "userHead": "1myg.jpg"
+      }
+    ]
+  }
 }
 
 

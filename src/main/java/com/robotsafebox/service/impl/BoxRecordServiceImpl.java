@@ -26,7 +26,15 @@ public class BoxRecordServiceImpl implements BoxRecordService {
         return boxRecordMapper.selectOpenRecord(boxId, userName);
     }
 
+    public List<Map> searchOpenRecordByMap(Map paramMap) {
+        return boxRecordMapper.selectOpenRecordByMap(paramMap);
+    }
+
     public List<Map> searchUserRecord(Long userId) {
         return boxRecordMapper.selectUserRecord(userId);
+    }
+
+    public List<Map> searchUserRecordByMap(Map paramMap) {
+        return boxRecordMapper.selectUserRecordByMap(paramMap);
     }
 }

@@ -124,4 +124,12 @@
     where gm.group_id=#{groupId,jdbcType=BIGINT}
   </select>
 
+  <select id="selectGroupMemberByGroupIdAndUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from ich_group_member
+    where id = #{groupId,jdbcType=BIGINT}
+    AND user_id = #{userId,jdbcType=BIGINT}
+  </select>
+
 </mapper>

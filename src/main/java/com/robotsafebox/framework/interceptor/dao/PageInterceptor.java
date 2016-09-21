@@ -79,17 +79,17 @@ public class PageInterceptor implements Interceptor {
             // 获取当前要执行的Sql语句，也就是我们直接在Mapper映射语句中写的Sql语句
             String sql = boundSql.getSql();
 
-            if (pager.getOthersql() != null) {
-                sql += pager.getOthersql();
-            }
+//            if (pager.getOthersql() != null) {
+//                sql += pager.getOthersql();
+//            }
 
             //根据分页类进行分页查询结果集
             String pageSql = sql;
-            if (pager.getReturnPager()) {
+//            if (pager.getReturnPager()) {
                 setPageParameter(sql, connection, mappedStatement, boundSql, pager);
                 // 获取分页Sql语句
                 pageSql = this.getPageSql(pager, sql);
-            }
+//            }
             // 利用反射设置当前BoundSql对应的sql属性为我们建立好的分页Sql语句
             ReflectUtil.setFieldValue(boundSql, "sql", pageSql);
         }
@@ -147,14 +147,14 @@ public class PageInterceptor implements Interceptor {
      * 查询条件
      */
     private StringBuffer getMysqlPageConditionSql(Pager<?> page, StringBuffer sqlBuffer) {
-        if (page.getCustomparams().size() != 0) {
-
-            sqlBuffer.append(" where ");
-
-            Map<String, Object> map = page.getCustomparams();
-            for (String k : map.keySet())
-                sqlBuffer.append(" ").append(map.get(k)).append(" ");
-        }
+//        if (page.getCustomparams().size() != 0) {
+//
+//            sqlBuffer.append(" where ");
+//
+//            Map<String, Object> map = page.getCustomparams();
+//            for (String k : map.keySet())
+//                sqlBuffer.append(" ").append(map.get(k)).append(" ");
+//        }
         return sqlBuffer;
     }
 

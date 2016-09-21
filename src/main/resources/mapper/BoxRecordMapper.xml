@@ -139,7 +139,28 @@
     ORDER BY br.create_time DESC
   </select>
 
+  <select id="selectOpenRecordByMap" resultType="java.util.HashMap">
+    select
+    u.name userName,u.head userHead, br.create_time createTime,br.remark remark,br.type type
+    from ich_box_record br
+    LEFT JOIN ich_user u ON br.user_id=u.id
+    where br.box_id=#{boxId,jdbcType=BIGINT}  AND (br.type=1 OR br.type=4 OR br.type=5)
+    <if test="userName != null">
+      AND u.name like CONCAT('%',#{userName,jdbcType=VARCHAR},'%' )
+    </if>
+    ORDER BY br.create_time DESC
+  </select>
+
   <select id="selectUserRecord" resultType="java.util.HashMap">
+    select
+    u.name userName,u.head userHead, br.create_time createTime,br.type type,br.remark remark
+    from ich_box_record br
+    LEFT JOIN ich_user u ON br.user_id=u.id
+    where br.user_id=#{userId,jdbcType=BIGINT}
+    ORDER BY br.create_time DESC
+  </select>
+
+  <select id="selectUserRecordByMap" resultType="java.util.HashMap">
     select
     u.name userName,u.head userHead, br.create_time createTime,br.type type,br.remark remark
     from ich_box_record br

@@ -14,8 +14,9 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     @Resource
     private GroupMemberMapper groupMemberMapper;
+
     public int saveGroupMember(GroupMember groupMember) {
-        if(groupMember.getId()!=null){
+        if (groupMember.getId() != null) {
             return groupMemberMapper.updateByPrimaryKeySelective(groupMember);
         }
         return groupMemberMapper.insertSelective(groupMember);
@@ -23,6 +24,10 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     public List<Map> searchGroupMemberByGroupId(Long groupId) {
         return groupMemberMapper.selectGroupMemberByGroupId(groupId);
+    }
+
+    public GroupMember getGroupMemberByGroupIdAndUserId(Long groupId, Long userId) {
+        return groupMemberMapper.selectGroupMemberByGroupIdAndUserId(groupId, userId);
     }
 
 }

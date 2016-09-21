@@ -12,6 +12,10 @@ public interface BoxRecordService {
 
     List<Map> searchOpenRecord(Long boxId, String userName);
 
+    List<Map> searchOpenRecordByMap(Map paramMap);
+
     List<Map> searchUserRecord(Long userId);
+
+    List<Map> searchUserRecordByMap(Map paramMap);
 
 }

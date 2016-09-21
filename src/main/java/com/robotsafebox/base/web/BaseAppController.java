@@ -20,12 +20,16 @@ public class BaseAppController {
         HttpSession session = request.getSession();
         if (session.getAttribute(Constant.API_SESSION_USERID) != null) {
             return Long.valueOf((String) session.getAttribute(Constant.API_SESSION_USERID));
+        } else {
+            throw new RuntimeException("BaseAppController:API_SESSION_USERID  ==  null");
         }
-        return null;
     }
 
     protected User getCurrentUser() {
         User user = userService.getUser(getCurrentUserId());
+        if (user == null) {
+            throw new RuntimeException("BaseAppController:getCurrentUser() == null");
+        }
         return user;
     }
 

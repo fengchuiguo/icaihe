@@ -22,4 +22,6 @@ public interface GroupMemberMapper {
     //new add
     List<Map> selectGroupMemberByGroupId(@Param("groupId") Long groupId);
 
+    GroupMember selectGroupMemberByGroupIdAndUserId(@Param("groupId") Long groupId, @Param("userId") Long userId);
+
 }

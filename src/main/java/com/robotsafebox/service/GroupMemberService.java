@@ -12,4 +12,6 @@ public interface GroupMemberService {
 
     List<Map> searchGroupMemberByGroupId(Long groupId);
 
+    GroupMember getGroupMemberByGroupIdAndUserId(Long groupId, Long userId);
+
 }

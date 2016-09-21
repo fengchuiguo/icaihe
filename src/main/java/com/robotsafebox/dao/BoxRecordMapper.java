@@ -22,6 +22,10 @@ public interface BoxRecordMapper {
     //new add
     List<Map> selectOpenRecord(@Param("boxId") Long boxId, @Param("userName") String userName);
 
+    List<Map> selectOpenRecordByMap(Map map);
+
     List<Map> selectUserRecord(@Param("userId") Long userId);
+
+    List<Map> selectUserRecordByMap(Map map);
 
 }
