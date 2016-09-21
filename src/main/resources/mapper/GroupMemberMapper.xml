@@ -128,7 +128,7 @@
     select
     <include refid="Base_Column_List" />
     from ich_group_member
-    where id = #{groupId,jdbcType=BIGINT}
+    where group_id = #{groupId,jdbcType=BIGINT}
     AND user_id = #{userId,jdbcType=BIGINT}
   </select>
 
