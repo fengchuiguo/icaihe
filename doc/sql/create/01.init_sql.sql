@@ -144,4 +144,8 @@ CREATE TABLE `ich_suggestion`(
 
 
 
+alter table ich_user add alarm_num INT default '0';
+
+
+
 

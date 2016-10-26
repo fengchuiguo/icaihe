@@ -14,6 +14,8 @@ public interface BoxRecordService {
 
     List<Map> searchOpenRecordByMap(Map paramMap);
 
+    List<Map> searchAlarmRecordByMap(Map paramMap);
+
     List<Map> searchUserRecord(Long userId);
 
     List<Map> searchUserRecordByMap(Map paramMap);

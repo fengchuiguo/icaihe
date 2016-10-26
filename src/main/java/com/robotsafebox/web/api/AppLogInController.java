@@ -107,6 +107,8 @@ public class AppLogInController extends BaseAppController {
             resultMap.put("userId", newUser.getId());
             resultMap.put("name", newUser.getName());
             resultMap.put("phone", newUser.getPhone());
+            resultMap.put("alarmNum", newUser.getAlarmNum() == null ? 0 : newUser.getAlarmNum());
+
 
             Long groupId = null;
             String companyName = null;

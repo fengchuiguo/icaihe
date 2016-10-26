@@ -83,7 +83,7 @@ public class AppApiController extends BaseAppController {
     }
 
     //搜索财盒群
-    @RequestMapping(value = "group/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @RequestMapping(value = "/group/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
     public JsonResult groupList(@RequestParam("groupName") String groupName) {
         JsonResult jsonResult = new JsonResult();
@@ -196,6 +196,36 @@ public class AppApiController extends BaseAppController {
         return jsonResult;
     }
 
+    //修改财盒wifiid
+    @RequestMapping(value = "/box/wifiId/update", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult boxWifiIdUpdate(Long boxId, String wifiId) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            Box box = boxService.getBox(boxId);
+            if (box == null) {
+                jsonResult.setMessage("保险箱不存在！");
+                return jsonResult;
+            }
+            //权限(保险箱创建人才可以修改)
+            User checkUser = userService.getCreateUserByBoxId(box.getId());
+            if (!checkUser.getId().equals(getCurrentUserId())) {
+                jsonResult.setMessage("无操作权限！");
+                return jsonResult;
+            }
+            box.setWifiId(wifiId);
+            box.setUpdateTime(DateUtil.getCurrentDateTime());
+            boxService.saveBox(box);
+
+            jsonResult.setMessage("修改成功!");
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
     //查看财盒
     @RequestMapping(value = "/box/detail", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
@@ -264,11 +294,16 @@ public class AppApiController extends BaseAppController {
     //开箱握手协议
     @RequestMapping(value = "/agreement/openBox/detail", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
-    public JsonResult agreementOpenBoxDetail(Long boxId, String key) {
+    public JsonResult agreementOpenBoxDetail(String ichId, String key) {
         JsonResult jsonResult = new JsonResult();
         try {
+            Box box = boxService.getBoxByIchId(ichId);
+            if (box == null) {
+                jsonResult.setMessage("保险箱不存在！");
+                return jsonResult;
+            }
             //判断是否有开箱的权限
-            List<BoxUser> boxUsers = boxUserService.searchBoxUser(boxId, (byte) 1, getCurrentUserId());
+            List<BoxUser> boxUsers = boxUserService.searchBoxUser(box.getId(), (byte) 1, getCurrentUserId());
             if (boxUsers == null || boxUsers.size() < 1) {
                 jsonResult.setMessage("您无开箱权限！");
                 return jsonResult;
@@ -403,7 +438,7 @@ public class AppApiController extends BaseAppController {
     }
 
     //取消开箱授权
-    @RequestMapping(value = "boxUser/delete", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @RequestMapping(value = "/boxUser/delete", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
     public JsonResult boxUserDelete(Long boxId, Long userId) {
         JsonResult jsonResult = new JsonResult();
@@ -482,6 +517,7 @@ public class AppApiController extends BaseAppController {
             resultMap.put("userId", user.getId());
             resultMap.put("name", user.getName());
             resultMap.put("phone", user.getPhone());
+            resultMap.put("alarmNum", user.getAlarmNum() == null ? 0 : user.getAlarmNum());
 
             Long groupId = null;
             String companyName = null;
@@ -633,6 +669,57 @@ public class AppApiController extends BaseAppController {
         return jsonResult;
     }
 
+    //查看报警记录（保险箱的报警和电量不足）(包含分页)
+    @RequestMapping(value = "/boxRecord/alarmRecord/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult boxRecordAlarmRecordList(Long boxId,Integer pageNo) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            //（todo权限）
+            Pager pager = new Pager();
+            pager.setPageNo(pageNo == null ? 1 : pageNo);
+
+            Map paramMap = new HashMap();
+            paramMap.put("boxId", boxId);
+            paramMap.put("pager", pager);
+            List<Map> mapList = boxRecordService.searchAlarmRecordByMap(paramMap);
+            //时间戳转换为时间
+            for (Map map : mapList) {
+                map.put("createTime", DateUtil.formatDateTime((Date) map.get("createTime"), DateUtil.FORMAT_DATETIME));
+            }
+            pager.setResults(mapList);
+
+            jsonResult.setData(pager);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+
+    //未读报警记录条数清零
+    @RequestMapping(value = "/alarmNum/delete", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult alarmNumDelete() {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            User user = getCurrentUser();
+            user.setAlarmNum(0);
+            userService.saveUser(user);
+
+            jsonResult.setMessage("清零成功！");
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+
     //查看群成员
     @RequestMapping(value = "/groupMember/group/list", method = RequestMethod.GET, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
@@ -679,7 +766,7 @@ public class AppApiController extends BaseAppController {
 
 
     //意见反馈
-    @RequestMapping(value = "message/add", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @RequestMapping(value = "/message/add", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
     public JsonResult messageAdd(String message) {
         JsonResult jsonResult = new JsonResult();

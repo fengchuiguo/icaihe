@@ -1,19 +1,14 @@
 package com.robotsafebox.web.api;
 
 import com.robotsafebox.base.json.JsonResult;
-import com.robotsafebox.entity.Box;
-import com.robotsafebox.entity.BoxMessage;
-import com.robotsafebox.entity.HardwareReportLog;
-import com.robotsafebox.entity.User;
+import com.robotsafebox.entity.*;
 import com.robotsafebox.framework.properties.Constant;
 import com.robotsafebox.framework.push.jpush.JPushUtils;
 import com.robotsafebox.framework.utils.DateUtil;
-import com.robotsafebox.service.BoxMessageService;
-import com.robotsafebox.service.BoxService;
-import com.robotsafebox.service.HardwareReportLogService;
-import com.robotsafebox.service.UserService;
+import com.robotsafebox.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +36,9 @@ public class reportController {
     @Resource
     private UserService userService;
 
+    @Autowired
+    protected BoxRecordService boxRecordService;
+
     @RequestMapping(value = "/report", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
     public JsonResult report(@RequestParam("ICHID") String ichid, @RequestParam("action") int actiontype) {
@@ -62,6 +60,7 @@ public class reportController {
                     if (box != null) {
                         User user = userService.getCreateUserByBoxId(box.getId());
                         if (user != null) {
+
                             String alertContent = JPushUtils.getAlertContent(box.getBoxName(), actiontype);
                             if (alertContent != null) {
                                 Boolean pushOK = JPushUtils.sendPush(user.getId(), alertContent, actiontype);
@@ -75,6 +74,23 @@ public class reportController {
                                     boxMessageService.saveBoxMessage(boxMessage);
                                 }
                             }
+
+                            //财盒创建人的动态中需要显示  报警 和 电量不足
+                            if (actiontype == 2 || actiontype == 3) {
+                                BoxRecord boxRecord = new BoxRecord();
+                                boxRecord.setBoxId(box.getId());
+                                boxRecord.setUserId(user.getId());
+                                boxRecord.setType((byte) (actiontype == 2 ? 7 : 8));
+                                boxRecord.setCreateTime(DateUtil.getCurrentDateTime());
+                                boxRecord.setRemark(actiontype == 2 ? "保险箱报警" : "保险箱电量不足");
+                                boxRecordService.saveBoxRecord(boxRecord);
+
+                                //需要记录 未读报警记录条数（包含 报警 和 电量不足）
+                                user.setAlarmNum((user.getAlarmNum() == null ? 0 : user.getAlarmNum()) + 1);
+                                userService.saveUser(user);
+
+                            }
+
                         }
                     }
                 }

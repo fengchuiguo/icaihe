@@ -23,6 +23,11 @@ public class User implements Serializable {
 
     private Date updateTime;
 
+
+    private Integer alarmNum;
+
+
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -93,6 +98,14 @@ public class User implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public Integer getAlarmNum() {
+        return alarmNum;
+    }
+
+    public void setAlarmNum(Integer alarmNum) {
+        this.alarmNum = alarmNum;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -111,6 +124,7 @@ public class User implements Serializable {
             && (this.getSex() == null ? other.getSex() == null : this.getSex().equals(other.getSex()))
             && (this.getHead() == null ? other.getHead() == null : this.getHead().equals(other.getHead()))
             && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+            && (this.getAlarmNum() == null ? other.getAlarmNum() == null : this.getAlarmNum().equals(other.getAlarmNum()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
@@ -125,6 +139,7 @@ public class User implements Serializable {
         result = prime * result + ((getSex() == null) ? 0 : getSex().hashCode());
         result = prime * result + ((getHead() == null) ? 0 : getHead().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
+        result = prime * result + ((getAlarmNum() == null) ? 0 : getAlarmNum().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         return result;

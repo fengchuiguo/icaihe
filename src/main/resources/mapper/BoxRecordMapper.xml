@@ -151,6 +151,16 @@
     ORDER BY br.create_time DESC
   </select>
 
+
+  <select id="selectAlarmRecordByMap" resultType="java.util.HashMap">
+    select
+    br.create_time createTime,br.remark remark,br.type type
+    from ich_box_record br
+    LEFT JOIN ich_user u ON br.user_id=u.id
+    where br.box_id=#{boxId,jdbcType=BIGINT}  AND (br.type=7 OR br.type=8)
+    ORDER BY br.create_time DESC
+  </select>
+
   <select id="selectUserRecord" resultType="java.util.HashMap">
     select
     u.name userName,u.head userHead, br.create_time createTime,br.type type,br.remark remark

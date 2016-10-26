@@ -52,6 +52,7 @@ code
     "userId": 1,
     "name": "lhy",
     "phone": "15266668767",
+    "alarmNum": "0",
     "isNewUser": false,
     "groupId": 11,
     "companyName": "xxx",
@@ -140,6 +141,7 @@ joinDate
 ichId
 boxName
 groupId
+wifiId
 
 返回：
 {
@@ -150,6 +152,18 @@ groupId
   }
 }
 
+---修改财盒wifiid
+/api/v1/box/wifiId/update
+[POST]
+boxId
+wifiId
+
+返回：
+{
+  "state": 1,
+  "message": "修改成功！",
+  "data": null
+}
 
 ---查看财盒
 /api/v1/box/detail
@@ -192,7 +206,7 @@ boxId
 ---开箱握手协议
 /api/v1/agreement/openBox/detail
 [POST]
-boxId
+ichId
 key
 
 返回：
@@ -334,6 +348,7 @@ userId
     "userId": 1,
     "name": "lhy",
     "phone": "15277665533",
+    "alarmNum": "0",
     "isNewUser": false,
     "groupId": 11,
     "companyName": "xxx",
@@ -453,6 +468,37 @@ pageNo
 }
 
 
+---查看报警记录（包含保险箱报警和保险箱电量不足）
+/api/v1/boxRecord/alarmRecord/list
+[POST]
+boxId
+pageNo
+
+返回:
+{
+  "state": 1,
+  "message": "Success",
+  "data": {
+    "pageNo": 1,
+    "pageSize": 20,
+    "totalRecord": 2,
+    "totalPage": 1,
+    "results": [
+      {
+        "createTime": "2016-08-26 11:11:07",
+        "remark": "保险箱报警",
+        "type": 7
+      },
+      {
+        "createTime": "2016-08-26 11:06:31",
+        "remark": "保险箱电量不足",
+        "type": 8
+      }
+    ]
+  }
+}
+
+
 ---查看群成员（我的财盒）
 /api/v1/groupMember/group/list
 [GET]
@@ -498,12 +544,92 @@ message
 }
 
 
+---未读报警记录条数清零
+/api/v1/alarmNum/delete
+[POST]
+
+返回：
+{
+  "state": 1,
+  "message": "清零成功！",
+  "data": null
+}
 
 
 
 
 
 
+
+==================【简单的更新记录161025】==================
+1，---开箱握手协议
+  /api/v1/agreement/openBox/detail
+  原先提交参数boxId改为了ichId
+
+2，---添加财盒
+  /api/v1/box/add
+ 多提交一个参数wifiId
+
+3，新增更改财盒 wifiId 的接口
+  ---修改财盒wifiid
+  /api/v1/box/wifiId/update
+  [POST]
+  boxId
+  wifiId
+
+  返回：
+  {
+    "state": 1,
+    "message": "修改成功！",
+    "data": null
+  }
+
+4,新增
+---查看报警记录（包含保险箱报警和保险箱电量不足）
+/api/v1/boxRecord/alarmRecord/list
+[POST]
+boxId
+pageNo
+
+返回:
+{
+  "state": 1,
+  "message": "Success",
+  "data": {
+    "pageNo": 1,
+    "pageSize": 20,
+    "totalRecord": 2,
+    "totalPage": 1,
+    "results": [
+      {
+        "createTime": "2016-08-26 11:11:07",
+        "remark": "保险箱报警",
+        "type": 7
+      },
+      {
+        "createTime": "2016-08-26 11:06:31",
+        "remark": "保险箱电量不足",
+        "type": 8
+      }
+    ]
+  }
+}
+
+5，用户动态中多了 保险箱报警(type=7） 和 保险箱电量不足(type=8）  记录。
+
+6，登录和获取用户个人信息两个接口 的返回结果 多了一个"alarmNum",表示未读报警记录数目。
+
+7，新增
+---未读报警记录条数清零
+/api/v1/alarmNum/delete
+[POST]
+
+返回：
+{
+  "state": 1,
+  "message": "清零成功！",
+  "data": null
+}
 
 
 

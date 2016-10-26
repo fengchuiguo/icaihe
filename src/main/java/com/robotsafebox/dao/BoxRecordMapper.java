@@ -24,6 +24,8 @@ public interface BoxRecordMapper {
 
     List<Map> selectOpenRecordByMap(Map map);
 
+    List<Map> selectAlarmRecordByMap(Map map);
+
     List<Map> selectUserRecord(@Param("userId") Long userId);
 
     List<Map> selectUserRecordByMap(Map map);
