@@ -82,7 +82,7 @@ public class reportController {
                                 boxRecord.setUserId(user.getId());
                                 boxRecord.setType((byte) (actiontype == 2 ? 7 : 8));
                                 boxRecord.setCreateTime(DateUtil.getCurrentDateTime());
-                                boxRecord.setRemark(actiontype == 2 ? "保险箱报警" : "保险箱电量不足");
+                                boxRecord.setRemark(alertContent);
                                 boxRecordService.saveBoxRecord(boxRecord);
 
                                 //需要记录 未读报警记录条数（包含 报警 和 电量不足）
