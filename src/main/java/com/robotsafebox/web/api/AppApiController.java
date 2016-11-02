@@ -254,7 +254,7 @@ public class AppApiController extends BaseAppController {
     //开箱(type=1),外借(type=4),即借即还(type=5)
     @RequestMapping(value = "/boxRecord/add", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
-    public JsonResult boxRecordAdd(int type, Long boxId) {
+    public JsonResult boxRecordAdd(int type, Long boxId,@RequestParam(required=false) String remark) {
         JsonResult jsonResult = new JsonResult();
         try {
             if (type != 1 && type != 4 && type != 5) {
@@ -278,7 +278,17 @@ public class AppApiController extends BaseAppController {
                 boxRecord.setBackTime(DateUtil.string2Date(backTime, DateUtil.FORMAT_DATE));
             }
             boxRecord.setCreateTime(DateUtil.getCurrentDateTime());
-            boxRecord.setRemark(type == 1 ? "开了财盒" : (type == 4 ? "外借" : (type == 5 ? "即借即还" : "")));
+            if (StringUtils.isNotBlank(remark)) {
+                if (type == 4) {
+                    remark = "外借:" + remark;
+                }
+                if (type == 5) {
+                    remark = "即借即还:" + remark;
+                }
+                boxRecord.setRemark(remark);
+            } else {
+                boxRecord.setRemark(type == 1 ? "开了财盒" : (type == 4 ? "外借" : (type == 5 ? "即借即还" : "")));
+            }
             boxRecordService.saveBoxRecord(boxRecord);
 
 //            jsonResult.setData(boxRecord);
@@ -520,7 +530,8 @@ public class AppApiController extends BaseAppController {
             resultMap.put("alarmNum", user.getAlarmNum() == null ? 0 : user.getAlarmNum());
 
             Long groupId = null;
-            String companyName = null;
+            String companyName = "";
+            String wifiId = "";
             Long boxId = null;
 
             Boolean isNewUser = true;
@@ -554,6 +565,15 @@ public class AppApiController extends BaseAppController {
             resultMap.put("groupId", groupId);
             resultMap.put("companyName", companyName);
             resultMap.put("boxId", boxId);
+
+            if (boxId != null) {
+                Box box = boxService.getBox(boxId);
+                if (box != null && StringUtils.isNotBlank(box.getWifiId())) {
+                    wifiId = box.getWifiId();
+                }
+            }
+            resultMap.put("wifiId", wifiId);
+
 
             jsonResult.setData(resultMap);
             jsonResult.setMessage(Constant.SUCCESS_MESSAGE);

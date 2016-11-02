@@ -2,6 +2,7 @@ package com.robotsafebox.web.api;
 
 import com.robotsafebox.base.json.JsonResult;
 import com.robotsafebox.base.web.BaseAppController;
+import com.robotsafebox.entity.Box;
 import com.robotsafebox.entity.BoxUser;
 import com.robotsafebox.entity.Group;
 import com.robotsafebox.entity.User;
@@ -10,8 +11,10 @@ import com.robotsafebox.framework.sms.SmsSendUtils;
 import com.robotsafebox.framework.tools.ApiTokenTool;
 import com.robotsafebox.framework.tools.CodeCheckTool;
 import com.robotsafebox.framework.utils.RandomUtil;
+import com.robotsafebox.service.BoxService;
 import com.robotsafebox.service.BoxUserService;
 import com.robotsafebox.service.GroupService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,9 @@ public class AppLogInController extends BaseAppController {
 
     @Autowired
     protected BoxUserService boxUserService;
+
+    @Autowired
+    protected BoxService boxService;
 
     /**
      * 此接口暂时无用
@@ -111,8 +117,9 @@ public class AppLogInController extends BaseAppController {
 
 
             Long groupId = null;
-            String companyName = null;
+            String companyName = "";
             Long boxId = null;
+            String wifiId = "";
 
             Boolean isNewUser = true;
             //是否创始人
@@ -145,6 +152,14 @@ public class AppLogInController extends BaseAppController {
             resultMap.put("groupId", groupId);
             resultMap.put("companyName", companyName);
             resultMap.put("boxId", boxId);
+
+            if (boxId != null) {
+                Box box = boxService.getBox(boxId);
+                if (box != null && StringUtils.isNotBlank(box.getWifiId())) {
+                    wifiId = box.getWifiId();
+                }
+            }
+            resultMap.put("wifiId", wifiId);
 
             jsonResult.setData(resultMap);
             jsonResult.setMessage(userFlag.equals("old") ? "登录成功！" : "注册成功！");

@@ -2,6 +2,7 @@ package com.robotsafebox.service;
 
 import com.robotsafebox.entity.BoxRecord;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,5 +20,7 @@ public interface BoxRecordService {
     List<Map> searchUserRecord(Long userId);
 
     List<Map> searchUserRecordByMap(Map paramMap);
+
+    List<BoxRecord> searchBackTimeIsTodayRecord();
 
 }

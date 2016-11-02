@@ -30,4 +30,6 @@ public interface BoxRecordMapper {
 
     List<Map> selectUserRecordByMap(Map map);
 
+    List<BoxRecord> selectBackTimeIsTodayRecord();
+
 }

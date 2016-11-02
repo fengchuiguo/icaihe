@@ -179,4 +179,11 @@
     ORDER BY br.create_time DESC
   </select>
 
+  <select id="selectBackTimeIsTodayRecord" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ich_box_record
+    where type=4 AND to_days(back_time) = to_days(now());
+  </select>
+
 </mapper>

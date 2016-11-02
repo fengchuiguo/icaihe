@@ -41,4 +41,9 @@ public class BoxRecordServiceImpl implements BoxRecordService {
     public List<Map> searchUserRecordByMap(Map paramMap) {
         return boxRecordMapper.selectUserRecordByMap(paramMap);
     }
+
+    public List<BoxRecord> searchBackTimeIsTodayRecord() {
+        return boxRecordMapper.selectBackTimeIsTodayRecord();
+    }
+
 }

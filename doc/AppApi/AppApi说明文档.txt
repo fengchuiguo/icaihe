@@ -52,11 +52,12 @@ code
     "userId": 1,
     "name": "lhy",
     "phone": "15266668767",
-    "alarmNum": "0",
+    "alarmNum": "0",    //表示未读报警记录数目
     "isNewUser": false,
     "groupId": 11,
     "companyName": "xxx",
-    "boxId": 12
+    "boxId": 12,
+    "wifiId": "TP-link113"
   }
 }
 或者：
@@ -222,6 +223,7 @@ key
 type （此处type=4）
 boxId
 backTime
+remark
 
 返回;
 {
@@ -237,6 +239,7 @@ backTime
 [POST]
 type （此处type=5）
 boxId
+remark
 
 返回;
 {
@@ -352,7 +355,8 @@ userId
     "isNewUser": false,
     "groupId": 11,
     "companyName": "xxx",
-    "boxId": 12
+    "boxId": 12,
+    "wifiId": "TP-link113"
   }
 }
 
@@ -558,82 +562,29 @@ message
 
 
 
+-----------【一些说明】------------------
+》消息推送：使用极光推送
+根据 useId 来标识。
+推送额外参数说明:
+actiontype：
+1：WIFI配置成功
+2：报警
+3：电量不足
+4：开箱
+5：关箱
+6: 外借到期归还提醒
 
 
 
-==================【简单的更新记录161025】==================
-1，---开箱握手协议
-  /api/v1/agreement/openBox/detail
-  原先提交参数boxId改为了ichId
-
-2，---添加财盒
-  /api/v1/box/add
- 多提交一个参数wifiId
-
-3，新增更改财盒 wifiId 的接口
-  ---修改财盒wifiid
-  /api/v1/box/wifiId/update
-  [POST]
-  boxId
-  wifiId
-
-  返回：
-  {
-    "state": 1,
-    "message": "修改成功！",
-    "data": null
-  }
-
-4,新增
----查看报警记录（包含保险箱报警和保险箱电量不足）
-/api/v1/boxRecord/alarmRecord/list
-[POST]
-boxId
-pageNo
-
-返回:
-{
-  "state": 1,
-  "message": "Success",
-  "data": {
-    "pageNo": 1,
-    "pageSize": 20,
-    "totalRecord": 2,
-    "totalPage": 1,
-    "results": [
-      {
-        "createTime": "2016-08-26 11:11:07",
-        "remark": "保险箱报警",
-        "type": 7
-      },
-      {
-        "createTime": "2016-08-26 11:06:31",
-        "remark": "保险箱电量不足",
-        "type": 8
-      }
-    ]
-  }
-}
-
-5，用户动态中多了 保险箱报警(type=7） 和 保险箱电量不足(type=8）  记录。
-
-6，登录和获取用户个人信息两个接口 的返回结果 多了一个"alarmNum",表示未读报警记录数目。
-
-7，新增
----未读报警记录条数清零
-/api/v1/alarmNum/delete
-[POST]
-
-返回：
-{
-  "state": 1,
-  "message": "清零成功！",
-  "data": null
-}
-
-
-
-
+》用户动态中对应type说明：
+1：开箱
+2：授权开箱
+3：取消授权
+4：外借
+5：即借即还
+6：外借到期归还提醒
+7：保险箱报警；
+8：保险箱电量不足
 
 
 
