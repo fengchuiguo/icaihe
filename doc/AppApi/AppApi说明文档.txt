@@ -1,21 +1,39 @@
-2016-09-21：
 
 1.0版本功能：注册，登录，初始化WiFi设置保险箱，绑定保险箱，蓝牙开箱，报警记录，开箱记录 。
-主要先做这些功能，概括为三大模块：用户模块+保险箱模块+通知记录模块
+主要概括为三大模块：用户模块+保险箱模块+通知记录模块
 
 一， 说明
     (1)返回json数据格式说明：
-       state：状态（1：SUCCESS，0：ERROR，-1：UnLogin，-2：NoPermission）
+       state：状态    //（1：SUCCESS，0：ERROR，-1：UnLogin，-2：NoPermission）
        data：数据
        message：说明
 
        例如：{"state":1,"message":"获取数据成功！","data":1466667342278}
 
-
     (2)请求说明：所有的请求需要带上token参数。
       （登录除外，token通过登录‘/initApi/login’来获取,目前有效期7天，过期或者服务器重启后需重新获取token）
        例如：http://localhost:8080/icaihe/api/v1/demo?token=94a625089169d175e852545808f9c2e9
 
+   （3）一些类型说明：
+       》消息推送：使用极光推送
+       根据 useId 来标识；
+       推送额外参数 actiontype 说明:
+       1：WIFI配置成功
+       2：报警
+       3：电量不足
+       4：开箱
+       5：关箱
+       6: 外借到期归还提醒
+
+       》用户动态中对应type说明：
+       1：开箱
+       2：授权开箱
+       3：取消授权
+       4：外借
+       5：即借即还
+       6：外借到期归还提醒
+       7：保险箱报警；
+       8：保险箱电量不足
 
 二，接口
 
@@ -37,7 +55,7 @@ type （登录的地方传入  1 ）
 }
 
 
----登录
+---登录（说明：测试阶段，登录的地方验证码可以随意输入便可登录）
 /initApi/login
 [POST]
 phone
@@ -49,15 +67,15 @@ code
   "message": "登录成功！",
   "data": {
     "token": "A6kK5pVdU42UMZF65uInSrflS6r1sTRO7pKDaiaiXSs%3D",
-    "userId": 1,
-    "name": "lhy",
-    "phone": "15266668767",
-    "alarmNum": "0",    //表示未读报警记录数目
-    "isNewUser": false,
-    "groupId": 11,
-    "companyName": "xxx",
-    "boxId": 12,
-    "wifiId": "TP-link113"
+    "userId": 1,             //用户id
+    "name": "lhy",           //用户姓名
+    "phone": "15266668767",  //用户手机号
+    "alarmNum": "0",         //表示未读报警记录数目
+    "isNewUser": false,      //如果是群组创建人或者群组成员，此处为false；如果没有创建群组，也没有加入某个群组，此处为true。
+    "groupId": 11,           //所在群组ID
+    "companyName": "xxx",    //所在群组名称
+    "boxId": 12,             //具有开箱权限的财盒的ID
+    "wifiId": "TP-link113"   //财盒绑定的无线网的名称
   }
 }
 或者：
@@ -256,16 +274,14 @@ remark
 groupId
 boxId
 
-返回data包含:
-authority  (‘0’表示未授权开箱，‘1’表示已经授权开箱)
-
+返回:
 {
   "state": 1,
   "message": "Success",
   "data": [
     {
       "joinDate": null,
-      "authority": 1,
+      "authority": 1,        // ‘0’表示未授权开箱，‘1’表示已经授权开箱
       "userId": 1,
       "userName": "lhy",
       "userPhone": "15211111111",
@@ -273,7 +289,7 @@ authority  (‘0’表示未授权开箱，‘1’表示已经授权开箱)
     },
     {
       "joinDate": "2016-08-21",
-      "authority": 0,
+      "authority": 0,        // ‘0’表示未授权开箱，‘1’表示已经授权开箱
       "userId": 4,
       "userName": "xiaobai",
       "userPhone": "15500000000",
@@ -405,7 +421,7 @@ pageNo
       },
       {
         "createTime": "2016-08-26 11:06:27",
-        "remark": "外借",
+        "remark": "外借:公章和注册文档",
         "userName": "lhy",
         "type": 4,
         "userHead": "1myg.jpg"
@@ -559,32 +575,6 @@ message
   "data": null
 }
 
-
-
-
------------【一些说明】------------------
-》消息推送：使用极光推送
-根据 useId 来标识。
-推送额外参数说明:
-actiontype：
-1：WIFI配置成功
-2：报警
-3：电量不足
-4：开箱
-5：关箱
-6: 外借到期归还提醒
-
-
-
-》用户动态中对应type说明：
-1：开箱
-2：授权开箱
-3：取消授权
-4：外借
-5：即借即还
-6：外借到期归还提醒
-7：保险箱报警；
-8：保险箱电量不足
 
 
 
