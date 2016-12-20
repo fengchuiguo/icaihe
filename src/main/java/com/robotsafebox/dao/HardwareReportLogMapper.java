@@ -3,6 +3,7 @@ package com.robotsafebox.dao;
 import com.robotsafebox.entity.HardwareReportLog;
 
 import java.util.List;
+import java.util.Map;
 
 public interface HardwareReportLogMapper {
     int deleteByPrimaryKey(Long id);
@@ -18,5 +19,10 @@ public interface HardwareReportLogMapper {
     int updateByPrimaryKey(HardwareReportLog record);
 
     List<HardwareReportLog> queryAll();
+
+    //new add
+
+    List<HardwareReportLog> selectRecordByMap(Map map);
+
 
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -23,4 +24,7 @@ public class HardwareReportLogServiceImpl implements HardwareReportLogService {
         return hardwareReportLogMapper.queryAll();
     }
 
+    public List<HardwareReportLog> selectRecordByMap(Map map) {
+        return hardwareReportLogMapper.selectRecordByMap(map);
+    }
 }

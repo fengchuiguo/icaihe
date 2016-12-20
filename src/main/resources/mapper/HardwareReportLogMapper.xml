@@ -102,4 +102,20 @@
     limit 0,100
   </select>
 
+
+  <select id="selectRecordByMap" resultType="HardwareReportLog">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    hardware_report_log
+    WHERE 1=1
+    <if test="ichId != null">
+      AND ich_id=#{ichId,jdbcType=VARCHAR}
+    </if>
+    <if test="actionType != null">
+      AND action_type=#{actionType,jdbcType=BIGINT}
+    </if>
+    ORDER BY create_time DESC
+  </select>
+
 </mapper>

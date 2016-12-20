@@ -34,6 +34,8 @@ public class AppApiController extends BaseAppController {
     protected SuggestionService suggestionService;
     @Autowired
     private BoxMessageService boxMessageService;
+    @Autowired
+    private HardwareReportLogService hardwareReportLogService;
 
     //创建财盒群
     @RequestMapping(value = "/group/add", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
@@ -535,6 +537,7 @@ public class AppApiController extends BaseAppController {
             Long boxId = null;
 
             Boolean isNewUser = true;
+            Boolean isGroupCreator = false;
             //是否创始人
             //创建的群组
             List<Group> groupList0 = groupService.searchGroupByUserIdAndMemberType(user.getId(), (byte) 0);
@@ -542,6 +545,7 @@ public class AppApiController extends BaseAppController {
                 isNewUser = false;
                 groupId = groupList0.get(0).getId();
                 companyName = groupList0.get(0).getGroupName();
+                isGroupCreator = true;
             } else {
                 //是否是成员
                 //所属的群组
@@ -573,6 +577,8 @@ public class AppApiController extends BaseAppController {
                 }
             }
             resultMap.put("wifiId", wifiId);
+
+            resultMap.put("isGroupCreator", isGroupCreator);
 
 
             jsonResult.setData(resultMap);
@@ -807,5 +813,80 @@ public class AppApiController extends BaseAppController {
         }
         return jsonResult;
     }
+
+
+    //获取硬件上报记录（全部类型，包含分页）
+    @RequestMapping(value = "/reportLog/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult reportLogList(Long boxId, Integer pageNo) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            Box box = boxService.getBox(boxId);
+            if (box == null) {
+                jsonResult.setMessage("财盒不存在！");
+                return jsonResult;
+            }
+            //判断是否有开箱的权限
+            List<BoxUser> boxUsers = boxUserService.searchBoxUser(boxId, (byte) 1, getCurrentUserId());
+            if (boxUsers == null || boxUsers.size() < 1) {
+                jsonResult.setMessage("您无权限！");
+                return jsonResult;
+            }
+            Pager pager = new Pager();
+            pager.setPageNo(pageNo == null ? 1 : pageNo);
+
+            Map paramMap = new HashMap();
+            paramMap.put("ichId", box.getIchId());
+            paramMap.put("pager", pager);
+            List<HardwareReportLog> mapList = hardwareReportLogService.selectRecordByMap(paramMap);
+            pager.setResults(mapList);
+
+            jsonResult.setData(pager);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+    //获取硬件上报记录（仅包含硬件上报的开箱记录）
+    @RequestMapping(value = "/reportLog/openRecord/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult reportLogOpenRecordList(Long boxId, Integer pageNo) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            Box box = boxService.getBox(boxId);
+            if (box == null) {
+                jsonResult.setMessage("财盒不存在！");
+                return jsonResult;
+            }
+            //判断是否有开箱的权限
+            List<BoxUser> boxUsers = boxUserService.searchBoxUser(boxId, (byte) 1, getCurrentUserId());
+            if (boxUsers == null || boxUsers.size() < 1) {
+                jsonResult.setMessage("您无权限！");
+                return jsonResult;
+            }
+            Pager pager = new Pager();
+            pager.setPageNo(pageNo == null ? 1 : pageNo);
+
+            Map paramMap = new HashMap();
+            paramMap.put("ichId", box.getIchId());
+            paramMap.put("actionType", 4);
+            paramMap.put("pager", pager);
+            List<HardwareReportLog> mapList = hardwareReportLogService.selectRecordByMap(paramMap);
+            pager.setResults(mapList);
+
+            jsonResult.setData(pager);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
 
 }
