@@ -79,14 +79,20 @@ public class AppLogInController extends BaseAppController {
         try {
 
 //            //todo start-测试时候，注释掉，发布前需要注释回来
-//            Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
-//            if (smscode == null) {
-//                jsonResult.setMessage("请重新获取验证码！");
-//                return jsonResult;
-//            }
-//            if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
-//                jsonResult.setMessage("验证码错误！");
-//                return jsonResult;
+//
+//            //todo 临时测试账号
+//            if ((phone.equals("13688886666") && code.equals("0987")) || (phone.equals("13866668888") && code.equals("0987"))) {
+//                //临时测试账号，跳过校验
+//            } else {
+//                Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
+//                if (smscode == null) {
+//                    jsonResult.setMessage("请重新获取验证码！");
+//                    return jsonResult;
+//                }
+//                if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
+//                    jsonResult.setMessage("验证码错误！");
+//                    return jsonResult;
+//                }
 //            }
 //            //todo end--测试时候，注释掉，发布前需要注释回来
 
@@ -122,6 +128,7 @@ public class AppLogInController extends BaseAppController {
             String wifiId = "";
 
             Boolean isNewUser = true;
+            Boolean isGroupCreator = false;
             //是否创始人
             //创建的群组
             List<Group> groupList0 = groupService.searchGroupByUserIdAndMemberType(newUser.getId(), (byte) 0);
@@ -129,6 +136,7 @@ public class AppLogInController extends BaseAppController {
                 isNewUser = false;
                 groupId = groupList0.get(0).getId();
                 companyName = groupList0.get(0).getGroupName();
+                isGroupCreator = true;
             } else {
                 //是否是成员
                 //所属的群组
@@ -160,6 +168,8 @@ public class AppLogInController extends BaseAppController {
                 }
             }
             resultMap.put("wifiId", wifiId);
+
+            resultMap.put("isGroupCreator", isGroupCreator);
 
             jsonResult.setData(resultMap);
             jsonResult.setMessage(userFlag.equals("old") ? "登录成功！" : "注册成功！");

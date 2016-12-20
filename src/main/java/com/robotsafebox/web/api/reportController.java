@@ -110,5 +110,15 @@ public class reportController {
         return "reportLog/reportLog";  /*   /WEB-INF/jsp/reportLog/"reportLog".jsp  */
     }
 
+    @RequestMapping(value = "/helpCenter", method = RequestMethod.GET)
+    public String helpCenter(Model model) {
+        return "public/helpCenter";
+    }
+
+    @RequestMapping(value = "/aboutICH", method = RequestMethod.GET)
+    public String aboutICH(Model model) {
+        return "public/aboutICH";
+    }
+
 
 }

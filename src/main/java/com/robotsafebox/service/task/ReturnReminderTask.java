@@ -24,7 +24,7 @@ public class ReturnReminderTask {
     protected BoxRecordService boxRecordService;
 
 
-    @Scheduled(cron = "0 54 11 ? * *")  //todo 测试,待修改
+    @Scheduled(cron = "0 0 9 ? * *")  //每天上午九点
     public void doJob() {
         System.out.println("【returnReminderTask定时任务开始执行...】");
 
@@ -41,7 +41,7 @@ public class ReturnReminderTask {
                 newBoxRecord.setUserId(boxRecord.getUserId());
                 newBoxRecord.setType((byte) (6));
                 newBoxRecord.setCreateTime(DateUtil.getCurrentDateTime());
-                newBoxRecord.setRemark(boxRecord.getRemark());
+                newBoxRecord.setRemark("(外借归还提醒)" + boxRecord.getRemark());
                 boxRecordService.saveBoxRecord(newBoxRecord);
                 recordNum++;
 
