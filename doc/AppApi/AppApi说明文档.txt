@@ -39,6 +39,11 @@
 
 http://localhost:8080/icaihe/
 
+*测试环境：
+http://114.55.109.235:8080/icaihe/
+
+*生产环境：
+http://114.55.109.235:8080/icaiheProduction/
 
 ---短信验证码
 /initApi/sendCode
@@ -74,7 +79,8 @@ code
     "groupId": 11,           //所在群组ID
     "companyName": "xxx",    //所在群组名称
     "boxId": 12,             //具有开箱权限的财盒的ID
-    "wifiId": "TP-link113"   //财盒绑定的无线网的名称
+    "wifiId": "TP-link113",  //财盒绑定的无线网的名称
+    "isGroupCreator": true   //是否是群组创建人（true表示是，false表示否）。目前只有群组创建人才可以添加财盒、修改财盒wifiid。此字段可用于前端判断。
   }
 }
 或者：
@@ -371,7 +377,8 @@ userId
     "groupId": 11,
     "companyName": "xxx",
     "boxId": 12,
-    "wifiId": "TP-link113"
+    "wifiId": "TP-link113",
+    "isGroupCreator": true
   }
 }
 
@@ -573,6 +580,171 @@ message
   "message": "清零成功！",
   "data": null
 }
+
+
+
+
+----------------------20161220新增-----------------------
+
+新增了2个接口，大家根据需要来调用吧。
+测试环境我测试了一下可以用。测试和生产环境都部署好了。
+
+新增接口1：仅返回硬件自动上报的”开箱“记录：
+/api/v1/reportLog/openRecord/list
+
+方式:POST
+
+参数：
+boxId
+pageNo
+(当然token还是要有的)
+
+示例返回结果：
+{
+  "state": 1,
+  "message": "Success",
+  "data": {
+    "pageNo": 1,
+    "pageSize": 20,
+    "totalRecord": 3,
+    "totalPage": 1,
+    "results": [
+      {
+        "id": 2628,
+        "ichId": "ICH106688000023",
+        "actionType": 4,
+        "createTime": "2016-12-02 01:13:09",
+        "remark": null
+      },
+      {
+        "id": 2626,
+        "ichId": "ICH106688000023",
+        "actionType": 4,
+        "createTime": "2016-12-02 01:03:05",
+        "remark": null
+      },
+      {
+        "id": 2625,
+        "ichId": "ICH106688000023",
+        "actionType": 4,
+        "createTime": "2016-12-02 01:02:30",
+        "remark": null
+      }
+    ]
+  }
+}
+
+
+
+新增接口2：返回硬件自动上报的“全部”记录：
+
+/api/v1/reportLog/list
+
+参数和返回结果的格式与上面一样，这个接口会返回全部类型的上报数据；
+actionType 说明如下：
+1, "WIFI配置成功",
+2, "报警",
+3, "电量不足",
+4, "开箱",
+5, "关箱";
+
+
+
+
+
+
+
+
+------------打卡签到 部分--------------
+
+1，打卡签到
+http://localhost:8081/icaihe/api/v1/signIn/add
+
+方式：POST
+
+参数：
+type   //1，2，3 。 类型说明（1：上班打卡，2：下班打卡，3：外出）
+message
+major
+minor
+addressX
+addressY
+
+
+{
+  "state": 1,
+  "message": "操作成功！",
+  "data": null
+}
+
+
+2，获取某一天某个人的记录：
+http://localhost:8081/icaihe/api/v1/signIn/list
+
+方式：POST
+
+参数：
+searchDate
+
+示例
+比如：2016-12-26
+
+{
+  "state": 1,
+  "message": "Success",
+  "data": [
+    {
+      "message": "公司安排外出见客户",
+      "createTime": 1482743627000,
+      "type": 3
+    },
+    {
+      "message": "公司安排外出见客户",
+      "createTime": 1482743622000,
+      "type": 3
+    },
+    {
+      "message": null,
+      "createTime": 1482742902000,
+      "type": 1
+    }
+  ]
+}
+
+
+
+------------注销财盒的部分-----------
+
+1，注销解绑
+(群组创建人才可以注销财盒)
+
+http://localhost:8081/icaihe/api/v1/box/writtenOff
+
+方式：POST
+
+参数：boxId
+
+示例返回结果：
+{
+  "state": 1,
+  "message": "Success",
+  "data": null
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

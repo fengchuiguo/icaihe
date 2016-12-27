@@ -123,4 +123,9 @@
   </select>
 
 
+  <delete id="deleteByBoxId" parameterType="java.lang.Long" >
+    delete from ich_box_user
+    where box_id = #{boxId,jdbcType=BIGINT}
+  </delete>
+
 </mapper>

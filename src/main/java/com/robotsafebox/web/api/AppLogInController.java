@@ -7,6 +7,7 @@ import com.robotsafebox.entity.BoxUser;
 import com.robotsafebox.entity.Group;
 import com.robotsafebox.entity.User;
 import com.robotsafebox.framework.properties.Constant;
+import com.robotsafebox.framework.properties.PropertiesConfig;
 import com.robotsafebox.framework.sms.SmsSendUtils;
 import com.robotsafebox.framework.tools.ApiTokenTool;
 import com.robotsafebox.framework.tools.CodeCheckTool;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +32,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/initApi")  // url:  /模块/资源/{id}细分
+@Scope("prototype")
 public class AppLogInController extends BaseAppController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -78,23 +81,27 @@ public class AppLogInController extends BaseAppController {
         JsonResult jsonResult = new JsonResult();
         try {
 
-//            //todo start-测试时候，注释掉，发布前需要注释回来
-//
-//            //todo 临时测试账号
-//            if ((phone.equals("13688886666") && code.equals("0987")) || (phone.equals("13866668888") && code.equals("0987"))) {
-//                //临时测试账号，跳过校验
-//            } else {
-//                Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
-//                if (smscode == null) {
-//                    jsonResult.setMessage("请重新获取验证码！");
-//                    return jsonResult;
-//                }
-//                if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
-//                    jsonResult.setMessage("验证码错误！");
-//                    return jsonResult;
-//                }
-//            }
-//            //todo end--测试时候，注释掉，发布前需要注释回来
+            if (PropertiesConfig.isProductionEnvironment()) {
+                //审核餐环境-临时测试账号
+                if ((phone.equals("13688886666") && code.equals("0987")) || (phone.equals("13866668888") && code.equals("0987"))) {
+                    //临时测试账号，跳过校验
+                } else {
+                    Object smscode = httpSession.getAttribute(CodeCheckTool.SMS_CODE);
+                    if (smscode == null) {
+                        jsonResult.setMessage("请重新获取验证码！");
+                        return jsonResult;
+                    }
+                    if (CodeCheckTool.checkSmsCodeFailure(phone, code, "1", smscode.toString())) {
+                        jsonResult.setMessage("验证码错误！");
+                        return jsonResult;
+                    }
+                }
+            }
+
+            if(phone.length()>11){
+                jsonResult.setMessage("请输入正确手机号！");
+                return jsonResult;
+            }
 
             String userFlag = "old";
             //用户不存在的话，注册新用户

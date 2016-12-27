@@ -7,10 +7,12 @@ import com.robotsafebox.framework.model.Pager;
 import com.robotsafebox.framework.properties.Constant;
 import com.robotsafebox.framework.push.jpush.JPushUtils;
 import com.robotsafebox.framework.tools.AgreementTool;
+import com.robotsafebox.framework.tools.SignInTool;
 import com.robotsafebox.framework.utils.DateUtil;
 import com.robotsafebox.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping(Constant.API_HEAD_URL)  // url:  /模块/资源/{id}细分
+@Scope("prototype")
 public class AppApiController extends BaseAppController {
 
     @Autowired
@@ -36,6 +39,8 @@ public class AppApiController extends BaseAppController {
     private BoxMessageService boxMessageService;
     @Autowired
     private HardwareReportLogService hardwareReportLogService;
+    @Autowired
+    private SignInService signInService;
 
     //创建财盒群
     @RequestMapping(value = "/group/add", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
@@ -46,7 +51,13 @@ public class AppApiController extends BaseAppController {
         JsonResult jsonResult = new JsonResult();
         try {
 
-            //todo权限，只允许创建一个？加入了就不允许创建？需求未定，接口暂时不限制。
+            //不予许重复加入
+            //所属的群组
+            List<Group> groupList = groupService.searchGroupByUserIdAndMemberType(getCurrentUserId(), null);
+            if (groupList != null && groupList.size() > 0) {
+                jsonResult.setMessage("只允许加入一个群组!");
+                return jsonResult;
+            }
 
             Group checkGroup = groupService.getGroupByGroupName(group.getGroupName());
             if (checkGroup != null) {
@@ -108,7 +119,13 @@ public class AppApiController extends BaseAppController {
         JsonResult jsonResult = new JsonResult();
         try {
 
-//          todo不予许重复加入
+            //不予许重复加入
+            //所属的群组
+            List<Group> groupList = groupService.searchGroupByUserIdAndMemberType(getCurrentUserId(), null);
+            if (groupList != null && groupList.size() > 0) {
+                jsonResult.setMessage("只允许加入一个群组!");
+                return jsonResult;
+            }
 
             GroupMember groupMember = new GroupMember();
             groupMember.setGroupId(groupId);
@@ -256,7 +273,7 @@ public class AppApiController extends BaseAppController {
     //开箱(type=1),外借(type=4),即借即还(type=5)
     @RequestMapping(value = "/boxRecord/add", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
-    public JsonResult boxRecordAdd(int type, Long boxId,@RequestParam(required=false) String remark) {
+    public JsonResult boxRecordAdd(int type, Long boxId, @RequestParam(required = false) String remark) {
         JsonResult jsonResult = new JsonResult();
         try {
             if (type != 1 && type != 4 && type != 5) {
@@ -648,7 +665,6 @@ public class AppApiController extends BaseAppController {
 //    public JsonResult boxRecordOpenRecordList(Long boxId, String userName) {
 //        JsonResult jsonResult = new JsonResult();
 //        try {
-//            //（todo权限）
 //            List<Map> mapList = boxRecordService.searchOpenRecord(boxId, userName);
 //            //时间戳转换为时间
 //            for (Map map : mapList) {
@@ -670,7 +686,6 @@ public class AppApiController extends BaseAppController {
     public JsonResult boxRecordOpenRecordList(Long boxId, String userName, Integer pageNo) {
         JsonResult jsonResult = new JsonResult();
         try {
-            //（todo权限）
             Pager pager = new Pager();
             pager.setPageNo(pageNo == null ? 1 : pageNo);
 
@@ -698,10 +713,9 @@ public class AppApiController extends BaseAppController {
     //查看报警记录（保险箱的报警和电量不足）(包含分页)
     @RequestMapping(value = "/boxRecord/alarmRecord/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
     @ResponseBody
-    public JsonResult boxRecordAlarmRecordList(Long boxId,Integer pageNo) {
+    public JsonResult boxRecordAlarmRecordList(Long boxId, Integer pageNo) {
         JsonResult jsonResult = new JsonResult();
         try {
-            //（todo权限）
             Pager pager = new Pager();
             pager.setPageNo(pageNo == null ? 1 : pageNo);
 
@@ -752,7 +766,6 @@ public class AppApiController extends BaseAppController {
     public JsonResult groupMemberList() {
         JsonResult jsonResult = new JsonResult();
         try {
-            //（todo权限）
             Long groupId = null;
             //创建的群组
             List<Group> groupList0 = groupService.searchGroupByUserIdAndMemberType(getCurrentUserId(), (byte) 0);
@@ -879,6 +892,149 @@ public class AppApiController extends BaseAppController {
             pager.setResults(mapList);
 
             jsonResult.setData(pager);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+
+    //打卡签到
+    @RequestMapping(value = "/signIn/add", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult signInAdd(@ModelAttribute("signIn") SignIn signIn) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+//          类型（1：上班打卡，2：下班打卡，3：外出）
+            if (signIn.getType() == null) {
+                jsonResult.setMessage("请选择打卡类型！");
+                return jsonResult;
+            }
+            if (signIn.getType() < 1 || signIn.getType() > 3) {
+                jsonResult.setMessage("请选择正确的打卡类型！");
+                return jsonResult;
+            }
+
+            User user = getCurrentUser();
+            signIn.setUserId(user.getId());
+            //获取当前用户的群组和群组绑定的财盒
+            Group group;
+            Box box;
+            //所属的群组
+            List<Group> groupList = groupService.searchGroupByUserIdAndMemberType(user.getId(), null);
+            if (groupList != null && groupList.size() > 0) {
+                group = groupList.get(0);
+                box = boxService.getBoxByGroupId(group.getId());
+                if (box != null) {
+                    signIn.setBoxId(box.getId());
+                }
+            } else {
+                jsonResult.setMessage("请先加入群组！");
+                return jsonResult;
+            }
+
+            //打卡方式（1财盒打卡。2坐标打卡）
+            if (StringUtils.isNotBlank(signIn.getMajor()) && StringUtils.isNotBlank(signIn.getMinor())) {
+                //1财盒打卡
+                if (box == null) {
+                    jsonResult.setMessage("您的群组没有绑定财盒！");
+                    return jsonResult;
+                }
+                //根据Major和Minor解析出ichid
+                String checkIchId = SignInTool.getIchId(signIn.getMajor(), signIn.getMinor());
+                if (StringUtils.isBlank(checkIchId)) {
+                    jsonResult.setMessage("转化ichId错误！");
+                    return jsonResult;
+                }
+                if (!checkIchId.equals(box.getIchId())) {
+                    jsonResult.setMessage("该财盒不属于您的群组！");
+                    return jsonResult;
+                }
+                signIn.setFlag(1);
+                signIn.setIchId(checkIchId);
+            } else {
+                if (StringUtils.isNotBlank(signIn.getAddressX()) && StringUtils.isNotBlank(signIn.getAddressY())) {
+                    //2坐标打卡
+                    if (StringUtils.isBlank(group.getAddressX()) || StringUtils.isBlank(group.getAddressY())) {
+                        jsonResult.setMessage("所属群组的坐标信息不完整！");
+                        return jsonResult;
+                    }
+                    if (SignInTool.checkDistanceOK(group.getAddressX(), group.getAddressY(), signIn.getAddressX(), signIn.getAddressY())) {
+                        signIn.setFlag(2);
+                        signIn.setDistance("" + SignInTool.getDistance(group.getAddressX(), group.getAddressY(), signIn.getAddressX(), signIn.getAddressY()));
+                    } else {
+                        jsonResult.setMessage("超出打卡范围！");
+                        return jsonResult;
+                    }
+                } else {
+                    jsonResult.setMessage("传递参数不完整！");
+                    return jsonResult;
+                }
+            }
+
+            //保存打卡签到记录
+            signIn.setCreateTime(DateUtil.getCurrentDateTime());
+            signIn.setUpdateTime(DateUtil.getCurrentDateTime());
+            signInService.saveSignIn(signIn);
+
+//            jsonResult.setData();
+            jsonResult.setMessage("操作成功！");
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+    //搜索当前登录人的打卡记录。日期字符串格式（yyyy-mm-dd）
+    @RequestMapping(value = "/signIn/list", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult signInList(@RequestParam("searchDate") String searchDate) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            User user = getCurrentUser();
+            List<Map> mapList = signInService.searchSignInByUserIdAndDate(user.getId(), searchDate);
+            jsonResult.setData(mapList);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+
+    //注销财盒
+    @RequestMapping(value = "/box/writtenOff", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult boxWrittenOff(@RequestParam("boxId") Long boxId) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            User user = getCurrentUser();
+            //权限(群组创建人才可以注销财盒)
+            Box box = boxService.getBox(boxId);
+            if (box == null) {
+                jsonResult.setMessage("财盒不存在！");
+                return jsonResult;
+            }
+            User checkUser = userService.getCreateUserByGroupId(box.getGroupId());
+            if (!checkUser.getId().equals(user.getId())) {
+                jsonResult.setMessage("无操作权限！");
+                return jsonResult;
+            }
+            //删除保险箱box删除保险箱用户表boxUser
+            boxService.deleteBox(box.getId());
+
+            //未读报警记录条数清零
+            user.setAlarmNum(0);
+            userService.saveUser(user);
+
+//            jsonResult.setData();
             jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
             jsonResult.setStateSuccess();
         } catch (Exception ex) {

@@ -60,7 +60,15 @@
 
         <!--生成对应表及类名-->
         <!--<table schema="" tableName="seckill"/>-->
-        <table tableName="ich_admin_user" domainObjectName="AdminUser"
+        <!--<table tableName="ich_admin_user" domainObjectName="AdminUser"-->
+               <!--enableCountByExample="false"-->
+               <!--enableUpdateByExample="false"-->
+               <!--enableDeleteByExample="false"-->
+               <!--enableSelectByExample="false"-->
+               <!--selectByExampleQueryId="false">-->
+        <!--</table> -->
+
+        <table tableName="ich_box_written_off" domainObjectName="BoxWrittenOff"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

@@ -18,4 +18,6 @@ public interface BoxMapper {
     //new add
     Box selectByIchId(String ichid);
 
+    Box selectByGroupId(Long groupId);
+
 }

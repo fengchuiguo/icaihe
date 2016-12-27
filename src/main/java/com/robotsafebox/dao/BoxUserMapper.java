@@ -21,4 +21,6 @@ public interface BoxUserMapper {
     //    new add
     List<BoxUser> selectBoxUser(@Param("boxId") Long boxId, @Param("type") Byte type, @Param("userId") Long userId);
 
+    int deleteByBoxId(@Param("boxId") Long boxId);
+
 }

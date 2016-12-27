@@ -11,6 +11,7 @@ import com.robotsafebox.service.demo1.SeckillService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ import java.util.List;
 @Controller
 //@RequestMapping("/api/v1")  // url:  /模块/资源/{id}细分
 @RequestMapping(Constant.API_HEAD_URL)  // url:  /模块/资源/{id}细分
-
+@Scope("prototype")
 //【demo测试类】
 public class UserController {
 

@@ -154,7 +154,10 @@
     from ich_group g
     LEFT JOIN ich_group_member gm
     ON g.id=gm.group_id
-    where gm.user_id = #{userId,jdbcType=BIGINT} AND gm.type = #{type,jdbcType=TINYINT}
+    where gm.user_id = #{userId,jdbcType=BIGINT}
+    <if test="type != null">
+      AND gm.type = #{type,jdbcType=TINYINT}
+    </if>
     ORDER BY g.create_time
   </select>
 

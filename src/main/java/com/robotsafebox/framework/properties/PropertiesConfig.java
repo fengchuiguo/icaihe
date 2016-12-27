@@ -63,4 +63,9 @@ public class PropertiesConfig {
         return PropertiesConfig.getConfig("uploadRoot");
     }
 
+//  判断是否是生产环境
+    public static Boolean isProductionEnvironment() {
+        return PropertiesConfig.getConfig("isProductionEnvironment").equals("true");
+    }
+
 }

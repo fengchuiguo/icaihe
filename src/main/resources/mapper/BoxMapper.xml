@@ -149,4 +149,11 @@
     where ich_id = #{ichid,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from ich_box
+    where group_id = #{groupId,jdbcType=BIGINT}
+  </select>
+
 </mapper>
