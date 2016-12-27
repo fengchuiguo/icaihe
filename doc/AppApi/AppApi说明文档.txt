@@ -39,11 +39,7 @@
 
 http://localhost:8080/icaihe/
 
-*测试环境：
-http://114.55.109.235:8080/icaihe/
 
-*生产环境：
-http://114.55.109.235:8080/icaiheProduction/
 
 ---短信验证码
 /initApi/sendCode
