@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.robotsafebox.dao.BoxWrittenOffMapper">
+  <resultMap id="BaseResultMap" type="com.robotsafebox.entity.BoxWrittenOff">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="box_id" jdbcType="BIGINT" property="boxId" />
+    <result column="ich_id" jdbcType="VARCHAR" property="ichId" />
+    <result column="ibeacon_id" jdbcType="VARCHAR" property="ibeaconId" />
+    <result column="wifi_id" jdbcType="VARCHAR" property="wifiId" />
+    <result column="wifi_password" jdbcType="VARCHAR" property="wifiPassword" />
+    <result column="box_name" jdbcType="VARCHAR" property="boxName" />
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="written_off_time" jdbcType="TIMESTAMP" property="writtenOffTime" />
+    <result column="box_user_ids" jdbcType="VARCHAR" property="boxUserIds" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, box_id, ich_id, ibeacon_id, wifi_id, wifi_password, box_name, group_id, create_time, 
+    update_time, written_off_time, box_user_ids
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ich_box_written_off
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from ich_box_written_off
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.robotsafebox.entity.BoxWrittenOff">
+    insert into ich_box_written_off (id, box_id, ich_id, 
+      ibeacon_id, wifi_id, wifi_password, 
+      box_name, group_id, create_time, 
+      update_time, written_off_time, box_user_ids
+      )
+    values (#{id,jdbcType=BIGINT}, #{boxId,jdbcType=BIGINT}, #{ichId,jdbcType=VARCHAR}, 
+      #{ibeaconId,jdbcType=VARCHAR}, #{wifiId,jdbcType=VARCHAR}, #{wifiPassword,jdbcType=VARCHAR}, 
+      #{boxName,jdbcType=VARCHAR}, #{groupId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{writtenOffTime,jdbcType=TIMESTAMP}, #{boxUserIds,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.robotsafebox.entity.BoxWrittenOff">
+    insert into ich_box_written_off
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="boxId != null">
+        box_id,
+      </if>
+      <if test="ichId != null">
+        ich_id,
+      </if>
+      <if test="ibeaconId != null">
+        ibeacon_id,
+      </if>
+      <if test="wifiId != null">
+        wifi_id,
+      </if>
+      <if test="wifiPassword != null">
+        wifi_password,
+      </if>
+      <if test="boxName != null">
+        box_name,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="writtenOffTime != null">
+        written_off_time,
+      </if>
+      <if test="boxUserIds != null">
+        box_user_ids,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="boxId != null">
+        #{boxId,jdbcType=BIGINT},
+      </if>
+      <if test="ichId != null">
+        #{ichId,jdbcType=VARCHAR},
+      </if>
+      <if test="ibeaconId != null">
+        #{ibeaconId,jdbcType=VARCHAR},
+      </if>
+      <if test="wifiId != null">
+        #{wifiId,jdbcType=VARCHAR},
+      </if>
+      <if test="wifiPassword != null">
+        #{wifiPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="boxName != null">
+        #{boxName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="writtenOffTime != null">
+        #{writtenOffTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="boxUserIds != null">
+        #{boxUserIds,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.robotsafebox.entity.BoxWrittenOff">
+    update ich_box_written_off
+    <set>
+      <if test="boxId != null">
+        box_id = #{boxId,jdbcType=BIGINT},
+      </if>
+      <if test="ichId != null">
+        ich_id = #{ichId,jdbcType=VARCHAR},
+      </if>
+      <if test="ibeaconId != null">
+        ibeacon_id = #{ibeaconId,jdbcType=VARCHAR},
+      </if>
+      <if test="wifiId != null">
+        wifi_id = #{wifiId,jdbcType=VARCHAR},
+      </if>
+      <if test="wifiPassword != null">
+        wifi_password = #{wifiPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="boxName != null">
+        box_name = #{boxName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="writtenOffTime != null">
+        written_off_time = #{writtenOffTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="boxUserIds != null">
+        box_user_ids = #{boxUserIds,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.robotsafebox.entity.BoxWrittenOff">
+    update ich_box_written_off
+    set box_id = #{boxId,jdbcType=BIGINT},
+      ich_id = #{ichId,jdbcType=VARCHAR},
+      ibeacon_id = #{ibeaconId,jdbcType=VARCHAR},
+      wifi_id = #{wifiId,jdbcType=VARCHAR},
+      wifi_password = #{wifiPassword,jdbcType=VARCHAR},
+      box_name = #{boxName,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      written_off_time = #{writtenOffTime,jdbcType=TIMESTAMP},
+      box_user_ids = #{boxUserIds,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+</mapper>

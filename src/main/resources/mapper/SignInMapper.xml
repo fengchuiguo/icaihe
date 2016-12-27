@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.robotsafebox.dao.SignInMapper" >
+  <resultMap id="BaseResultMap" type="com.robotsafebox.entity.SignIn" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="box_id" property="boxId" jdbcType="BIGINT" />
+    <result column="ich_id" property="ichId" jdbcType="VARCHAR" />
+    <result column="major" property="major" jdbcType="VARCHAR" />
+    <result column="minor" property="minor" jdbcType="VARCHAR" />
+    <result column="address_x" property="addressX" jdbcType="VARCHAR" />
+    <result column="address_y" property="addressY" jdbcType="VARCHAR" />
+    <result column="distance" property="distance" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, box_id, ich_id, major, minor, address_x, address_y, distance, flag, 
+    type, message, remark, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ich_sign_in
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ich_sign_in
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.robotsafebox.entity.SignIn" >
+    insert into ich_sign_in (id, user_id, box_id, 
+      ich_id, major, minor, 
+      address_x, address_y, distance, 
+      flag, type, message, 
+      remark, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{boxId,jdbcType=BIGINT}, 
+      #{ichId,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR}, #{minor,jdbcType=VARCHAR}, 
+      #{addressX,jdbcType=VARCHAR}, #{addressY,jdbcType=VARCHAR}, #{distance,jdbcType=VARCHAR}, 
+      #{flag,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{message,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.robotsafebox.entity.SignIn" >
+    insert into ich_sign_in
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="boxId != null" >
+        box_id,
+      </if>
+      <if test="ichId != null" >
+        ich_id,
+      </if>
+      <if test="major != null" >
+        major,
+      </if>
+      <if test="minor != null" >
+        minor,
+      </if>
+      <if test="addressX != null" >
+        address_x,
+      </if>
+      <if test="addressY != null" >
+        address_y,
+      </if>
+      <if test="distance != null" >
+        distance,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="boxId != null" >
+        #{boxId,jdbcType=BIGINT},
+      </if>
+      <if test="ichId != null" >
+        #{ichId,jdbcType=VARCHAR},
+      </if>
+      <if test="major != null" >
+        #{major,jdbcType=VARCHAR},
+      </if>
+      <if test="minor != null" >
+        #{minor,jdbcType=VARCHAR},
+      </if>
+      <if test="addressX != null" >
+        #{addressX,jdbcType=VARCHAR},
+      </if>
+      <if test="addressY != null" >
+        #{addressY,jdbcType=VARCHAR},
+      </if>
+      <if test="distance != null" >
+        #{distance,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.robotsafebox.entity.SignIn" >
+    update ich_sign_in
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="boxId != null" >
+        box_id = #{boxId,jdbcType=BIGINT},
+      </if>
+      <if test="ichId != null" >
+        ich_id = #{ichId,jdbcType=VARCHAR},
+      </if>
+      <if test="major != null" >
+        major = #{major,jdbcType=VARCHAR},
+      </if>
+      <if test="minor != null" >
+        minor = #{minor,jdbcType=VARCHAR},
+      </if>
+      <if test="addressX != null" >
+        address_x = #{addressX,jdbcType=VARCHAR},
+      </if>
+      <if test="addressY != null" >
+        address_y = #{addressY,jdbcType=VARCHAR},
+      </if>
+      <if test="distance != null" >
+        distance = #{distance,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.robotsafebox.entity.SignIn" >
+    update ich_sign_in
+    set user_id = #{userId,jdbcType=BIGINT},
+      box_id = #{boxId,jdbcType=BIGINT},
+      ich_id = #{ichId,jdbcType=VARCHAR},
+      major = #{major,jdbcType=VARCHAR},
+      minor = #{minor,jdbcType=VARCHAR},
+      address_x = #{addressX,jdbcType=VARCHAR},
+      address_y = #{addressY,jdbcType=VARCHAR},
+      distance = #{distance,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      message = #{message,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!--new add-->
+  <select id="selectSignInByUserIdAndDate" resultType="java.util.HashMap">
+    select
+    type,message,create_time createTime
+    from ich_sign_in
+    WHERE 1=1
+    AND user_id = #{userId,jdbcType=BIGINT}
+    AND  <![CDATA[ unix_timestamp(create_time) >= unix_timestamp(#{startDate,jdbcType=VARCHAR}) ]]>
+    AND  <![CDATA[ unix_timestamp(create_time) <= unix_timestamp(#{endDate,jdbcType=VARCHAR}) ]]>
+    ORDER BY create_time DESC
+  </select>
+
+</mapper>
