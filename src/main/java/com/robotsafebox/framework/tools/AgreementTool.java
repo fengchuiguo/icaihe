@@ -1,7 +1,17 @@
 package com.robotsafebox.framework.tools;
 
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
+import java.security.SecureRandom;
 
 
 /**
@@ -31,8 +41,11 @@ public class AgreementTool {
 
 //        System.out.println("1ranmd== " + randCmd[0] + ", " + randCmd[1] + ", " + randCmd[2] + ", " + randCmd[3]);
 //        System.out.println("0ranmd== " + Hex.encodeHexString(randCmd));
-        byte[] result = new byte[]{randCmd[2], randCmd[3]};
-        return Hex.encodeHexString(result);
+//        byte[] result = new byte[]{randCmd[2], randCmd[3]};
+//        return Hex.encodeHexString(result);
+
+        return Hex.encodeHexString(randCmd);
+
     }
 
     public static void main(String[] args) throws DecoderException {

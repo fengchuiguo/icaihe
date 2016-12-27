@@ -149,3 +149,42 @@ alter table ich_user add alarm_num INT default '0';
 
 
 
+
+CREATE TABLE `ich_sign_in`(
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `user_id` BIGINT  COMMENT '用户id',
+  `box_id` BIGINT  COMMENT '盒子id',
+  `ich_id` varchar(100)  COMMENT '计算的ichid',
+  `major` varchar(100)  COMMENT '硬件参数',
+  `minor` varchar(100)  COMMENT '硬件参数',
+  `address_x` varchar(50)  COMMENT '地图X坐标',
+  `address_y` varchar(50)  COMMENT '地图Y坐标',
+  `distance` varchar(50)  COMMENT '计算的距离（单位:米）',
+  `flag`  INT  COMMENT '打卡类型（1：财盒打卡，2：坐标打卡）',
+  `type`  INT  COMMENT '类型（1：上班打卡，2：下班打卡，3：外出）',
+  `message` varchar(500)  COMMENT '内容',
+  `remark` varchar(500)   COMMENT '备注',
+  `create_time` TIMESTAMP  COMMENT '创建时间',
+  `update_time` TIMESTAMP  COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='打卡签到表';
+
+
+CREATE TABLE `ich_box_written_off`(
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `box_id` BIGINT  NOT NULL COMMENT 'box_id',
+  `ich_id` varchar(100)  COMMENT 'ICHID',
+  `ibeacon_id` varchar(100)  COMMENT 'iBeacon广播ID',
+  `wifi_id` varchar(100)  COMMENT 'WIFI ID',
+  `wifi_password` varchar(100)  COMMENT 'WIFI 密码',
+  `box_name` varchar(100)  COMMENT '财盒昵称',
+  `group_id`  BIGINT   COMMENT '群组ID',
+  `create_time` TIMESTAMP  COMMENT '创建时间',
+  `update_time` TIMESTAMP  COMMENT '修改时间',
+  `written_off_time` TIMESTAMP  COMMENT '注销时间',
+  `box_user_ids` varchar(500)  COMMENT '注销时,有开箱权限的人员id（多个用逗号分隔）',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='已注销保险箱表';
+
+
+

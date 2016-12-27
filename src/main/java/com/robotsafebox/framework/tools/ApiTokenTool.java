@@ -117,7 +117,7 @@ public class ApiTokenTool {
 
 //            result = cipher_DECRYPT.doFinal(Base64.decodeBase64(encryptStr));
 
-//          说明：SpringMvc获取参数时候，对于URL拼接的参数，获取后好像自己执行过了URLDecoder.decode，MAC上postman会附加参数到url，所以会自动转换
+//          说明：SpringMvc获取参数时候，对于URL拼接的参数，获取后好像自己执行过了URLDecoder.decode，
 //          但是对于普通post和get请求，token被当做传递的参数的时候，不会处理，需要自己转换一下。
             result = cipher_DECRYPT.doFinal(Base64.decodeBase64(URLDecoder.decode(encryptStr, Constant.UTF_8)));
 
