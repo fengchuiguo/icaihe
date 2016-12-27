@@ -12,6 +12,7 @@ import cn.jpush.api.push.model.notification.AndroidNotification;
 import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
 import com.robotsafebox.enums.ReportLogActionEnum;
+import com.robotsafebox.framework.properties.PropertiesConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,16 +21,16 @@ public class JPushUtils {
     protected static final Logger LOG = LoggerFactory.getLogger(PushExample.class);
 
 
-    private static final String appKey = "XXXXXX";
-    private static final String masterSecret = "XXXXXX";
+    private static final String appKey = "xxx";
+    private static final String masterSecret = "xxx";
 
 
     public static final String AndroidNotification_TITLE = "i财盒消息";
 
     public static void main(String[] args) {
-        Long alias = 2l;
+        Long alias = 70l;
         String alertContent = "测试内容";
-        Integer extraType = 1;
+        Integer extraType = 5;
         System.out.println(sendPush(alias, alertContent, extraType));
     }
 
@@ -68,8 +69,12 @@ public class JPushUtils {
                         .addPlatformNotification(IosNotification.newBuilder().autoBadge()
                                 .addExtra("type", extraType).build())
                         .build())
+                .setOptions(Options.newBuilder()
+                        .setApnsProduction(PropertiesConfig.isProductionEnvironment())//true表示生产环境，false表示开发环境。不指定默认表示开发环境。
+                        .build())
                 .build();
     }
+
 
     public static String getAlertContent(String boxName, Integer type) {
         String actioninfo = "";
