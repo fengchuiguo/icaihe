@@ -150,6 +150,8 @@ alter table ich_user add alarm_num INT default '0';
 
 
 
+
+
 CREATE TABLE `ich_sign_in`(
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `user_id` BIGINT  COMMENT '用户id',
@@ -185,6 +187,25 @@ CREATE TABLE `ich_box_written_off`(
   `box_user_ids` varchar(500)  COMMENT '注销时,有开箱权限的人员id（多个用逗号分隔）',
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='已注销保险箱表';
+
+
+CREATE TABLE `ich_group_written_off`(
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `group_id` BIGINT  NOT NULL COMMENT 'group_id',
+  `group_name` varchar(100)  COMMENT '企业组织名称',
+  `group_create_time`  DATE   COMMENT '企业组织创立日期',
+  `group_address` varchar(150)  COMMENT '企业组织地址',
+  `address_x` varchar(50)  COMMENT '地图X坐标',
+  `address_y` varchar(50)  COMMENT '地图Y坐标',
+  `create_time` TIMESTAMP  COMMENT '创建时间',
+  `update_time` TIMESTAMP  COMMENT '修改时间',
+  `written_off_time` TIMESTAMP  COMMENT '注销时间',
+  `written_off_user_id` BIGINT  COMMENT '注销人ID（也就是群组创建人）',
+  `group_member_user_ids` varchar(500)  COMMENT '注销时,群组成员的人员id（多个用逗号分隔）',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='已注销群组表';
+
+
 
 
 

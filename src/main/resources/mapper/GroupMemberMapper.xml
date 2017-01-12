@@ -132,4 +132,15 @@
     AND user_id = #{userId,jdbcType=BIGINT}
   </select>
 
+  <delete id="deleteGroupMemberByGroupId" parameterType="java.lang.Long" >
+    delete from ich_group_member
+    where group_id = #{groupId,jdbcType=BIGINT}
+  </delete>
+
+  <delete id="deleteGroupMemberByGroupIdAndUserId" parameterType="java.lang.Long" >
+    delete from ich_group_member
+    where group_id = #{groupId,jdbcType=BIGINT}
+    AND user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+
 </mapper>

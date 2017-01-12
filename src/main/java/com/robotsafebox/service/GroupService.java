@@ -15,6 +15,10 @@ public interface GroupService {
 
     List<Map> searchGroup(String groupName);
 
-    List<Group> searchGroupByUserIdAndMemberType(Long userId,Byte type);
+    List<Group> searchGroupByUserIdAndMemberType(Long userId, Byte type);
+
+    void groupWrittenOff(Long groupId, Long userId);
+
+    void groupQuit(Long groupId, Long userId);
 
 }

@@ -158,7 +158,7 @@ public class AppApiController extends BaseAppController {
         try {
             //权限(群组创建人才可以添加财盒)
             User checkUser = userService.getCreateUserByGroupId(box.getGroupId());
-            if (!checkUser.getId().equals(getCurrentUserId())) {
+            if (checkUser == null || !getCurrentUserId().equals(checkUser.getId())) {
                 jsonResult.setMessage("无操作权限！");
                 return jsonResult;
             }
@@ -1035,6 +1035,67 @@ public class AppApiController extends BaseAppController {
             userService.saveUser(user);
 
 //            jsonResult.setData();
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+
+    //注销群组
+    @RequestMapping(value = "/group/writtenOff", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult groupWrittenOff(@RequestParam("groupId") Long groupId) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            User user = getCurrentUser();
+            User checkUser = userService.getCreateUserByGroupId(groupId);
+            if (!checkUser.getId().equals(user.getId())) {
+                jsonResult.setMessage("无操作权限！");
+                return jsonResult;
+            }
+            //删除保险箱box删除保险箱用户表boxUser
+            groupService.groupWrittenOff(groupId, user.getId());
+            //未读报警记录条数清零
+            user.setAlarmNum(0);
+            userService.saveUser(user);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
+
+    //退出群组
+    @RequestMapping(value = "/group/quit", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult groupQuit(@RequestParam("groupId") Long groupId) {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            User user = getCurrentUser();
+            //权限(群组成员才可以退出群组)
+            //是否是成员
+            //所属的群组
+            List<Group> groupList1 = groupService.searchGroupByUserIdAndMemberType(user.getId(), (byte) 1);
+            if (groupList1 != null && groupList1.size() > 0) {
+                if (groupList1.get(0).getId() != groupId) {
+                    jsonResult.setMessage("您不属于该群组！");
+                    return jsonResult;
+                }
+            } else {
+                jsonResult.setMessage("您尚未加入任何群组！");
+                return jsonResult;
+            }
+            //删除
+            groupService.groupQuit(groupId, user.getId());
+            //未读报警记录条数清零
+            user.setAlarmNum(0);
+            userService.saveUser(user);
             jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
             jsonResult.setStateSuccess();
         } catch (Exception ex) {

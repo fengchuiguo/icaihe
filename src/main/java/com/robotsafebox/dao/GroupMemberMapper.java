@@ -24,4 +24,8 @@ public interface GroupMemberMapper {
 
     GroupMember selectGroupMemberByGroupIdAndUserId(@Param("groupId") Long groupId, @Param("userId") Long userId);
 
+    int deleteGroupMemberByGroupId(@Param("groupId") Long groupId);
+
+    int deleteGroupMemberByGroupIdAndUserId(@Param("groupId") Long groupId, @Param("userId") Long userId);
+
 }

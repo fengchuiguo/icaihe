@@ -68,7 +68,15 @@
                <!--selectByExampleQueryId="false">-->
         <!--</table> -->
 
-        <table tableName="ich_box_written_off" domainObjectName="BoxWrittenOff"
+        <!--<table tableName="ich_box_written_off" domainObjectName="BoxWrittenOff"-->
+               <!--enableCountByExample="false"-->
+               <!--enableUpdateByExample="false"-->
+               <!--enableDeleteByExample="false"-->
+               <!--enableSelectByExample="false"-->
+               <!--selectByExampleQueryId="false">-->
+        <!--</table>-->
+
+        <table tableName="ich_group_written_off" domainObjectName="GroupWrittenOff"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

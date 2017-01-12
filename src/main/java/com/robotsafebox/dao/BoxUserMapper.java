@@ -23,4 +23,6 @@ public interface BoxUserMapper {
 
     int deleteByBoxId(@Param("boxId") Long boxId);
 
+    int deleteByBoxIdAndUserId(@Param("boxId") Long boxId, @Param("userId") Long userId);
+
 }
