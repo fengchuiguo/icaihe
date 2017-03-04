@@ -5,6 +5,7 @@ import com.robotsafebox.base.web.BaseAppController;
 import com.robotsafebox.entity.*;
 import com.robotsafebox.framework.model.Pager;
 import com.robotsafebox.framework.properties.Constant;
+import com.robotsafebox.framework.push.PushTask.PushTaskTool;
 import com.robotsafebox.framework.push.jpush.JPushUtils;
 import com.robotsafebox.framework.tools.AgreementTool;
 import com.robotsafebox.framework.tools.SignInTool;
@@ -1105,5 +1106,22 @@ public class AppApiController extends BaseAppController {
         return jsonResult;
     }
 
+
+    //取消报警继续推送（财盒一次报警时候，服务器会推送三次。调用此接口后，比如已经报警2次，可以取消后续第3次推送）
+    @RequestMapping(value = "/alertPush/stop", method = RequestMethod.POST, produces = {Constant.CONTENT_TYPE_JSON})
+    @ResponseBody
+    public JsonResult alertPushStop() {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            User user = getCurrentUser();
+            PushTaskTool.removeTask(user.getId(),2);
+            jsonResult.setMessage(Constant.SUCCESS_MESSAGE);
+            jsonResult.setStateSuccess();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonResult.setMessage(Constant.EXCEPTION_MESSAGE);
+        }
+        return jsonResult;
+    }
 
 }

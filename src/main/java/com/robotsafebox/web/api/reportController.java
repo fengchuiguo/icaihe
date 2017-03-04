@@ -3,6 +3,8 @@ package com.robotsafebox.web.api;
 import com.robotsafebox.base.json.JsonResult;
 import com.robotsafebox.entity.*;
 import com.robotsafebox.framework.properties.Constant;
+import com.robotsafebox.framework.push.PushTask.PushTask;
+import com.robotsafebox.framework.push.PushTask.PushTaskTool;
 import com.robotsafebox.framework.push.jpush.JPushUtils;
 import com.robotsafebox.framework.utils.DateUtil;
 import com.robotsafebox.service.*;
@@ -65,16 +67,19 @@ public class reportController {
 
                             String alertContent = JPushUtils.getAlertContent(box.getBoxName(), actiontype);
                             if (alertContent != null) {
-                                Boolean pushOK = JPushUtils.sendPush(user.getId(), alertContent, actiontype);
-                                if (pushOK) {
-                                    BoxMessage boxMessage = new BoxMessage();
-                                    boxMessage.setBoxId(box.getId());
-                                    boxMessage.setUserId(user.getId());
-                                    boxMessage.setType((byte) actiontype);
-                                    boxMessage.setMessage(alertContent);
-                                    boxMessage.setCreateTime(DateUtil.getCurrentDateTime());
-                                    boxMessageService.saveBoxMessage(boxMessage);
+                                if (actiontype == 2) {
+                                    //新需求:报警的时候加入定时任务，在服务器检查的时候推送3次
+                                    PushTaskTool.addTask(new PushTask(user.getId(), alertContent, 2));
+                                } else {
+                                    JPushUtils.sendPush(user.getId(), alertContent, actiontype);
                                 }
+                                BoxMessage boxMessage = new BoxMessage();
+                                boxMessage.setBoxId(box.getId());
+                                boxMessage.setUserId(user.getId());
+                                boxMessage.setType((byte) actiontype);
+                                boxMessage.setMessage(alertContent);
+                                boxMessage.setCreateTime(DateUtil.getCurrentDateTime());
+                                boxMessageService.saveBoxMessage(boxMessage);
                             }
 
                             //财盒创建人的动态中需要显示  报警 和 电量不足
